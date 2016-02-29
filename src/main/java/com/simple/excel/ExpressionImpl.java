@@ -1,9 +1,5 @@
 package com.simple.excel;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,18 +9,15 @@ import static com.simple.excel.Operation.parseOperation;
 
 public class ExpressionImpl implements Expression
 {
-    final String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
-    final String INTEGER_PATTERN = "^-?[0-9]+$";
-    final String STRING_PATTERN = "^'\\w+$";
+    final static String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
+    final static String INTEGER_PATTERN = "^-?[0-9]+$";
+    final static String STRING_PATTERN = "^'\\w+$";
 
-
-    private static Logger log = LogManager.getLogger(ExpressionImpl.class);
-
-    private String expression;
+    final private String expression;
 
     private DataWrapper calculated = null;
 
-    public ExpressionImpl(String expression)
+    public ExpressionImpl(final String expression)
     {
         this.expression = expression;
     }
@@ -46,14 +39,14 @@ public class ExpressionImpl implements Expression
      * @return reverse polish notation.
      * @throws Exception error by parsing expression.
      */
-    private List<DataWrapper> getRPN(List<DataWrapper> rightSideInSplit)
+    private List<DataWrapper> getRPN(final List<DataWrapper> rightSideInSplit)
     {
         if(rightSideInSplit.get(rightSideInSplit.size() - 1).getClazz().equals(Operation.class))
         {
             throw new FormatErrorException("Error expression. Check the expression.");
         }
 
-        List<DataWrapper> RPNListInSplit = new ArrayList();
+        List<DataWrapper> rpnListInSplit = new ArrayList();
         Stack<DataWrapper> sbStack = new Stack();
         DataWrapper cTmp;
         for(int i = 0; i < rightSideInSplit.size(); i++)
@@ -65,26 +58,26 @@ public class ExpressionImpl implements Expression
                 while(sbStack.size() > 0)
                 {
                     cTmp = sbStack.peek();
-                    if(cTmp.getClazz().equals(Operation.class) && (opPrior(cTmp.getStringValue()) <= opPrior(cTmp.getStringValue())))
+                    if(cTmp.getClazz().equals(Operation.class) && opPrior(cTmp.getStringValue()) <= opPrior(cTmp.getStringValue()))
                     {
-                        RPNListInSplit.add(sbStack.pop());
+                        rpnListInSplit.add(sbStack.pop());
                     }
                 }
                 sbStack.push(exprTerm);
             }
             else
             {
-                RPNListInSplit.add(exprTerm);
+                rpnListInSplit.add(exprTerm);
             }
         }
 
         // Add stack's operators to the reverse polish notation out.
         while(sbStack.size() > 0)
         {
-            RPNListInSplit.add(sbStack.pop());
+            rpnListInSplit.add(sbStack.pop());
         }
 
-        return RPNListInSplit;
+        return rpnListInSplit;
     }
 
     /**
@@ -97,7 +90,7 @@ public class ExpressionImpl implements Expression
     public void calculate(final Map<String, String> data)
     {
         List<DataWrapper> rightSideInSplit = getRPN(parseExpression());
-        DataWrapper dA = null, dB = null;
+        DataWrapper dAWrapper = null, dBWrapper = null;
         DataWrapper sTmp;
         Deque<DataWrapper> stack = new ArrayDeque();
         Iterator<DataWrapper> it = rightSideInSplit.iterator();
@@ -111,18 +104,18 @@ public class ExpressionImpl implements Expression
                 {
                     throw new FormatErrorException("Incorrect amount of data on the stack for the operation " + sTmp);
                 }
-                dB = stack.pop();
-                dA = stack.pop();
-                if (!Number.class.isAssignableFrom(dA.getClazz()) || !Number.class.isAssignableFrom(dB.getClazz()))
+                dBWrapper = stack.pop();
+                dAWrapper = stack.pop();
+                if (!Number.class.isAssignableFrom(dAWrapper.getClazz()) || !Number.class.isAssignableFrom(dBWrapper.getClazz()))
                 {
-                    throw new FormatErrorException("Unsupported operation for types " + dA.getClazz() + " and " + dB.getClazz());
+                    throw new FormatErrorException("Unsupported operation for types " + dAWrapper.getClazz() + " and " + dBWrapper.getClazz());
                 }
-                Double dAInteger;
-                Double dBInteger;
+                Double dA;
+                Double dB;
                 try
                 {
-                    dAInteger = (Double) parseObjectFromString(dA);
-                    dBInteger = (Double) parseObjectFromString(dB);
+                    dA = (Double) parseObjectFromString(dAWrapper);
+                    dB = (Double) parseObjectFromString(dBWrapper);
                 }
                 catch(Exception ex)
                 {
@@ -132,25 +125,25 @@ public class ExpressionImpl implements Expression
                 switch(op)
                 {
                     case ADDITION:
-                        dAInteger = dAInteger + dBInteger;
+                        dA = dA + dB;
                         break;
                     case SUBSTRACTION:
-                        dAInteger = dAInteger - dBInteger;
+                        dA = dA - dB;
                         break;
                     case DIVISION:
-                        if(dBInteger == 0)
+                        if(dB == 0)
                         {
                             throw new FormatErrorException("Division by 0.");
                         }
-                        dAInteger = dAInteger / dBInteger;
+                        dA = dA / dB;
                         break;
                     case MULTIPLICATION:
-                        dAInteger = dAInteger * dBInteger;
+                        dA = dA * dB;
                         break;
                     default:
                         throw new FormatErrorException("Unsupported_operation " + sTmp);
                 }
-                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dAInteger)));
+                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dA)));
             }
             else
             {
@@ -190,7 +183,7 @@ public class ExpressionImpl implements Expression
         return directDependencies;
     }
 
-    public static <T> T parseObjectFromString(DataWrapper<T> parseInfo) throws Exception
+    public static <T> T parseObjectFromString(final DataWrapper<T> parseInfo) throws Exception
     {
         return (T) parseInfo.getClazz().getConstructor(new Class[]{String.class}).newInstance(parseInfo.getStringValue());
     }
@@ -280,10 +273,6 @@ public class ExpressionImpl implements Expression
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(sIn);
 
-        if(m.find())
-        {
-            return true;
-        }
-        return false;
+        return m.find();
     }
 }

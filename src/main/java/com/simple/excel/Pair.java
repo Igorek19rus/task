@@ -6,7 +6,7 @@ public class Pair<T, U>
     private final U second;
     private transient final int hash;
 
-    public Pair(T f, U s)
+    public Pair(final T f, final U s)
     {
         this.first = f;
         this.second = s;
@@ -31,19 +31,19 @@ public class Pair<T, U>
     }
 
     @Override
-    public boolean equals(Object oth)
+    public boolean equals(final Object otherObject)
     {
-        if(this == oth)
+        if(this == otherObject)
         {
             return true;
         }
-        if(oth == null || !(getClass().isInstance(oth)))
+        if(otherObject == null || !(getClass().isInstance(otherObject)))
         {
             return false;
         }
-        Pair<T, U> other = getClass().cast(oth);
-        return (first == null ? other.first == null : first.equals(other.first))
-                && (second == null ? other.second == null : second.equals(other.second));
+        Pair<T, U> other = getClass().cast(otherObject);
+        return first == null ? other.first == null : first.equals(other.first)
+                && second == null ? other.second == null : second.equals(other.second);
     }
 
 }

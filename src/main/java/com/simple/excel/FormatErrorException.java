@@ -7,17 +7,17 @@ public class FormatErrorException extends RuntimeException
         super();
     }
 
-    public FormatErrorException(String s)
+    public FormatErrorException(final String s)
     {
         super(s);
     }
 
-    public FormatErrorException(String s, Throwable throwable)
+    public FormatErrorException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }
 
-    public FormatErrorException(Throwable throwable)
+    public FormatErrorException(final Throwable throwable)
     {
         super(throwable);
     }

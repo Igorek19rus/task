@@ -5,11 +5,11 @@ import java.util.List;
 
 public class DynamicMatrix
 {
-    private List<List<Cell>> cells;
-    private int rowSize;
-    private int columnSize;
+    final private List<List<Cell>> cells;
+    final private int rowSize;
+    final private int columnSize;
 
-    public DynamicMatrix(int rowSize, int columnSize)
+    public DynamicMatrix(final int rowSize, final int columnSize)
     {
         this.rowSize = rowSize;
         this.columnSize = columnSize;
@@ -53,7 +53,7 @@ public class DynamicMatrix
      * @param cellId cell id.
      * @returnlement of the matrix.
      */
-    public Cell getElement(CellId cellId)
+    public Cell getElement(final CellId cellId)
     {
         Pair<Integer, Integer> cellIdToIndex = CellId.cellIdToIndexes(cellId);
         return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());

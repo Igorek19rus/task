@@ -10,9 +10,9 @@ public class Table
 {
     private static Logger log = LogManager.getLogger(Table.class);
 
-    private DynamicMatrix matrix;
+    final private DynamicMatrix matrix;
 
-    private int INITIAL_DEEP = 1;
+    final static private int INITIAL_DEEP = 1;
 
     public Table(final String data)
     {
@@ -61,19 +61,9 @@ public class Table
         }
     }
 
-    public Table(DynamicMatrix matrix)
-    {
-        this.matrix = matrix;
-    }
-
     public DynamicMatrix getMatrix()
     {
         return matrix;
-    }
-
-    public void setMatrix(DynamicMatrix matrix)
-    {
-        this.matrix = matrix;
     }
 
     /**
@@ -85,7 +75,7 @@ public class Table
      * @param j cell column index.
      * @throws Exception cycle dependencies exception.
      */
-    private void analyse(int deep, int visited[][], int i, int j) throws Exception
+    private void analyse(final int deep, final int visited[][], final int i, final int j) throws Exception
     {
         //TODO: do smth with the 2d array.
         visited[i][j] = deep;
@@ -143,7 +133,7 @@ public class Table
      * @param j column index.
      * @return cycle dependency cell flag.
      */
-    public boolean isCycleDependencies(int i, int j)
+    public boolean isCycleDependencies(final int i, final int j)
     {
         return matrix.getElement(i, j).getParentCellDependencies().contains(matrix.getElement(i, j).getCellId());
     }
@@ -175,7 +165,7 @@ public class Table
      * @param childDependencyValues map of the children (string cell id - calculated string value) information.
      * @return string value.
      */
-    private String calculateCell(int i, int j, Map<String, String> childDependencyValues)
+    private String calculateCell(final int i, final int j, final Map<String, String> childDependencyValues)
     {
         if(i > matrix.getRowSize() || j > matrix.getColumnSize())
         {

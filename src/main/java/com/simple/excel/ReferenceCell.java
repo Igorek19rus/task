@@ -8,7 +8,7 @@ public class ReferenceCell
 
     String value;
 
-    public ReferenceCell(String value)
+    public ReferenceCell(final String value)
     {
         this.value = value;
     }
@@ -20,7 +20,7 @@ public class ReferenceCell
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
         if(this == o)
         {

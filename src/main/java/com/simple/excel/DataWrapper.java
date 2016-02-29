@@ -7,10 +7,10 @@ package com.simple.excel;
 public class DataWrapper<T>
 {
 
-    private Class<T> clazz;
-    private String stringValue;
+    final private Class<T> clazz;
+    final private String stringValue;
 
-    public DataWrapper(Class clazz, String stringValue)
+    public DataWrapper(final Class clazz, final String stringValue)
     {
         this.clazz = clazz;
         this.stringValue = stringValue.trim();
@@ -27,7 +27,7 @@ public class DataWrapper<T>
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
         if(this == o)
         {

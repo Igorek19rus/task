@@ -18,7 +18,7 @@ public class CellId implements Comparable
         this.row = cellId.getSecond();
     }
 
-    public CellId(int row, int column)
+    public CellId(final int row, final int column)
     {
         this.column = (char) (column + 65);
         this.row = row + 1;
@@ -36,7 +36,7 @@ public class CellId implements Comparable
 
     public String toString()
     {
-        return "" + column + row;
+        return column + String.valueOf(row);
     }
 
     public static Pair<Character, Integer> parseReference(final String stringReference)
@@ -62,7 +62,7 @@ public class CellId implements Comparable
      * @param cellId CellId value.
      * @return integer index values.
      */
-    public static Pair<Integer, Integer> cellIdToIndexes(CellId cellId)
+    public static Pair<Integer, Integer> cellIdToIndexes(final CellId cellId)
     {
         return new Pair<Integer, Integer>(cellId.getRow() - 1, (int) cellId.getColumn() - 65);
     }
@@ -73,7 +73,7 @@ public class CellId implements Comparable
      * @param column
      * @return
      */
-    public static CellId IndexesToCellId(final int row, final int column)
+    public static CellId indexesToCellId(final int row, final int column)
     {
         return new CellId(row, column);
     }
@@ -85,12 +85,12 @@ public class CellId implements Comparable
      * @param column column.
      * @return CellId value.
      */
-    public static Pair<Character, Integer> indexToCellIdLabel(int row, int column)
+    public static Pair<Character, Integer> indexToCellIdLabel(final int row, final int column)
     {
         return new Pair<Character, Integer>((char) (column + 65), row + 1);
     }
 
-    public int compareTo(Object o)
+    public int compareTo(final Object o)
     {
         CellId entry = (CellId) o;
         int rowResult = this.row - entry.getRow();
@@ -105,7 +105,7 @@ public class CellId implements Comparable
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
         if(this == o)
         {

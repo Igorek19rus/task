@@ -48,12 +48,12 @@ public enum Operation
      * @param op char of operation.
      * @return byte operation priority.
      */
-    public static byte opPrior(char op)
+    public static byte opPrior(final char op)
     {
         return 1;
     }
 
-    public static byte opPrior(String op)
+    public static byte opPrior(final String op)
     {
         return 1;
     }

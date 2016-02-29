@@ -19,15 +19,15 @@ public class Cell
     private CellType type = CellType.NULL;
     private ErrorMessage error = ErrorMessage.NO_ERROR;
     private Expression expression;
-    private Set<CellId> childrenCellDependencies = new TreeSet();
-    private Set<CellId> parentCellDependencies = new TreeSet();
+    final private Set<CellId> childrenCellDependencies = new TreeSet();
+    final private Set<CellId> parentCellDependencies = new TreeSet();
 
     public Cell(final String cellId)
     {
         this.cellId = new CellId(cellId);
     }
 
-    public Cell(int row, int col)
+    public Cell(final int row, final int col)
     {
         Pair<Character, Integer> cellIdLabel = CellId.indexToCellIdLabel(row, col);
         cellId = new CellId(cellIdLabel.getFirst() + cellIdLabel.getSecond().toString());
@@ -65,7 +65,7 @@ public class Cell
      * Set input string value.
      * @param stringValue output string value.
      */
-    public void setStringValue(String stringValue)
+    public void setStringValue(final String stringValue)
     {
         this.stringValue = stringValue.trim();
     }
@@ -75,7 +75,7 @@ public class Cell
         return type;
     }
 
-    public void setType(CellType type)
+    public void setType(final CellType type)
     {
         this.type = type;
     }
@@ -209,7 +209,6 @@ public class Cell
         {
             log.info("Error parsing : " + stringValue);
             setErrorType(ErrorMessage.FORMAT_ERROR);
-            return;
         }
     }
 
@@ -268,7 +267,7 @@ public class Cell
         return expression;
     }
 
-    public void setExpression(ExpressionImpl expression)
+    public void setExpression(final ExpressionImpl expression)
     {
         this.expression = expression;
     }
@@ -295,7 +294,7 @@ public class Cell
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
         if(this == o)
         {
