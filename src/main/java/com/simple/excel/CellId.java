@@ -1,24 +1,27 @@
 package com.simple.excel;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 public class CellId implements Comparable
 {
     private final char column;
     private final int row;
 
-    public CellId(final int row, final char column)
-    {
-        this.row = row;
-        this.column = column;
-    }
+//    public CellId(final int row, final char column)
+//    {
+//        this.row = row;
+//        this.column = column;
+//    }
 
     public CellId(final String referenceString)
     {
         Pair<Character, Integer> cellId = CellId.parseReference(referenceString);
         this.column = cellId.getFirst();
         this.row = cellId.getSecond();
+    }
+
+    public CellId(int row, int column)
+    {
+        this.column = (char) (column + 65);
+        this.row = row + 1;
     }
 
     public char getColumn()
@@ -59,9 +62,20 @@ public class CellId implements Comparable
      * @param cellId CellId value.
      * @return integer index values.
      */
-    public static Pair<Integer, Integer> cellIdToIndex(CellId cellId)
+    public static Pair<Integer, Integer> cellIdToIndexes(CellId cellId)
     {
         return new Pair<Integer, Integer>(cellId.getRow() - 1, (int) cellId.getColumn() - 65);
+    }
+
+    /**
+     * Convert row and column indexes to cellId object.
+     * @param row
+     * @param column
+     * @return
+     */
+    public static CellId IndexesToCellId(final int row, final int column)
+    {
+        return new CellId(row, column);
     }
 
     /**

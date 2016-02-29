@@ -11,6 +11,7 @@ public class TableTest
             + "8\t=1-A1\t'rt\t=E1\t=B2\n"
             + "5\t=A1+D2+E2\t=A3\t=A3+B3\t=B3\n"
             + "6\t=A3\t=A1\t=C3\t-9";
+
     public static String SIMPLE_NULL_TABLE = "3\t5\n"
             + " \t \t \t \t \n"
             + " \t \t \t \t \n"
@@ -61,8 +62,6 @@ public class TableTest
 
         table = new Table(SIMPLE_TABLE);
         tableToCompare = new Table(SIMPLE_NULL_TABLE);
-//        table.initTable(SIMPLE_TABLE);
-//        tableToCompare.initTable(SIMPLE_NULL_TABLE);
 
         constructChildrenDependenciesOfSimpleTable(tableToCompare);
         constructSimpleTableCellTypes(tableToCompare);
@@ -79,8 +78,6 @@ public class TableTest
 
         table = new Table(CYCLE_TABLE);
         tableToCompare = new Table(CYCLE_TABLE);
-//        table.initTable(CYCLE_TABLE);
-//        tableToCompare.initTable(CYCLE_TABLE);
         constructCycleTableCellTypes(tableToCompare);
         assertEquals(CYCLE_TABLE.substring(4), table.getMatrix().printStringValueTable());
         for(int i = 0; i < table.getMatrix().getRowSize(); i++)

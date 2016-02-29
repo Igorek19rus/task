@@ -29,6 +29,10 @@ public class Main
             + "12\t=C2\t3\t'Sample\n"
             + "=A1+B1*C1/5\t=A2*B1\t=B3-C3\t'Spread\n"
             + "'Test\t=4-3\t5\t'Sheet\n";
+    public static String SIMPLE_NULL_TABLE = "3\t5\n"
+            + " \t \t \t \t \n"
+            + " \t \t \t \t \n"
+            + " \t \t \t ";
 
     public static void main(String[] args)
     {
@@ -42,10 +46,10 @@ public class Main
         System.out.println(table.getMatrix().printTable());
         System.out.println();
 
-         tableString = TABLE_DATA2;
+        tableString = TABLE_DATA2;
         System.out.println(tableString);
         System.out.println("=====");
-         table = new Table(tableString);
+        table = new Table(tableString);
         table.buildDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
@@ -92,21 +96,30 @@ public class Main
         System.out.println(table.getMatrix().printTable());
         System.out.println();
 
+//        tableString = SIMPLE_NULL_TABLE;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+
 
 //        System.out.println(tableString);
 //        System.out.println("=====");
-//        //TODO: move init table to contructor?
 //        table = new Table(tableString);
 ////        table.initTable(tableString);
-//        //TODO: how much time parsing of expressions is called? 1, 2, 3?
+//        //TODO: how much time parsing of expressions is called? 2
 //        table.buildDependencyTrees();
 //        table.resolveCycleDependencies();
 ////        System.out.println(table.getMatrix().printStringValueTable());
-//        table.calculationTable();
-//        System.out.println(table.getMatrix().printTable());
-////        table.getMatrix().printTableType();
-////        System.out.println(table.getMatrix().printTableIndex());
-////        table.getMatrix().showChildrenCellDependancies();
-////        table.getMatrix().showParentCellDependancies();
+    //        table.calculationTable();
+    //        System.out.println(table.getMatrix().printTable());
+    ////        table.getMatrix().printTableType();
+    ////        System.out.println(table.getMatrix().printTableIndex());
+    ////        table.getMatrix().showChildrenCellDependancies();
+    ////        table.getMatrix().showParentCellDependancies();
     }
 }

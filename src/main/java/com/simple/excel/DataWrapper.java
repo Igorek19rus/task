@@ -1,5 +1,9 @@
 package com.simple.excel;
 
+/**
+ * Data wrapper which store class and string representation of the data
+ * @param <T> class generic.
+ */
 public class DataWrapper<T>
 {
 

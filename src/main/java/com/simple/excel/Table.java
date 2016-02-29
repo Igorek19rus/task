@@ -16,50 +16,48 @@ public class Table
 
     public Table(final String data)
     {
-        //TODO: extract to constants
         String rowPattern = "\n";
         String cellPattern = "\t";
 
         String[] rows = data.split(rowPattern);
         String[] dimensions = rows[0].split(cellPattern);
-        //TODO: handle possible exception
         int rowSize;
         int colSize;
         try {
             rowSize = Integer.parseInt(dimensions[0]);
             colSize = Integer.parseInt(dimensions[1]);
         } catch (RuntimeException ex) {
-            log.error("Error dimention parsing.");
-            throw new FormatErrorException(ex);
+            log.error("Error table parse. Error dimention parsing.");
+            throw new FormatErrorException("Error table parse. Error dimention parsing.", ex);
         }
         if (rows.length-1 != rowSize)
         {
-            throw new FormatErrorException("Size error exception");
+            throw new FormatErrorException("Error table parse. Size error exception.");
         }
 
         matrix = new DynamicMatrix(rowSize, colSize);
 
+        Map<String, String> nullData = new HashMap<String, String>();
         try {
             for (int k1 = 0; k1 < rowSize; k1++) {
                 String[] cellsInRow = rows[k1 + 1].split(cellPattern);
                 if (cellsInRow.length != colSize)
                 {
-                    throw new FormatErrorException("Size error exception");
+                    throw new FormatErrorException("Error table parse. Size error exception");
                 }
                 for (int k2 = 0; k2 < colSize; k2++) {
                     Cell curCell = matrix.getElement(k1, k2);
                     curCell.setStringValue(cellsInRow[k2]);
                     curCell.initType();
 
-                    if (curCell.getExpression() == null) {
-                        //TODO asd
-                        curCell.calculateValue(new HashMap<String, String>());
+                    if (!curCell.getType().equals(CellType.EXPRESSION)) {
+                        curCell.calculateValue(nullData);
                     }
                 }
             }
         } catch (RuntimeException ex) {
             log.error("Error parse table.");
-            throw new FormatErrorException(ex);
+            throw new FormatErrorException("Error parse table.", ex);
         }
     }
 
@@ -78,54 +76,6 @@ public class Table
         this.matrix = matrix;
     }
 
-//    public void initTable(final String data)
-//    {
-//        //TODO: extract to constants
-//        String rowPattern = "\n";
-//        String cellPattern = "\t";
-//
-//        String[] rows = data.split(rowPattern);
-//        String[] dimensions = rows[0].split(cellPattern);
-//        //TODO: handle possible exception
-//        int rowSize;
-//        int colSize;
-//        try {
-//            rowSize = Integer.parseInt(dimensions[0]);
-//            colSize = Integer.parseInt(dimensions[1]);
-//        } catch (RuntimeException ex) {
-//            log.error("Error dimention parsing.");
-//            throw new FormatErrorException(ex);
-//        }
-//        if (rows.length-1 != rowSize)
-//        {
-//            throw new FormatErrorException("Size error exception");
-//        }
-//
-//        matrix = new DynamicMatrix(rowSize, colSize);
-//
-//        try {
-//            for (int k1 = 0; k1 < rowSize; k1++) {
-//                String[] cellsInRow = rows[k1 + 1].split(cellPattern);
-//                if (cellsInRow.length != colSize)
-//                {
-//                    throw new FormatErrorException("Size error exception");
-//                }
-//                for (int k2 = 0; k2 < colSize; k2++) {
-//                    Cell curCell = matrix.getElement(k1, k2);
-//                    curCell.setStringValue(cellsInRow[k2]);
-//                    curCell.initType();
-//
-//                    if (curCell.getExpression() == null) {
-//                        curCell.calculateValue();
-//                    }
-//                }
-//            }
-//        } catch (RuntimeException ex) {
-//            log.error("Error parse table.");
-//            throw new FormatErrorException(ex);
-//        }
-//    }
-
     /**
      * Analyze cycle dependencies and add parent related cells to the parent dependency collection.
      *
@@ -137,6 +87,7 @@ public class Table
      */
     private void analyse(int deep, int visited[][], int i, int j) throws Exception
     {
+        //TODO: do smth with the 2d array.
         visited[i][j] = deep;
         Cell cellIJ = matrix.getElement(i, j);
         if(cellIJ.getType().equals(CellType.EXPRESSION))
@@ -144,9 +95,8 @@ public class Table
             for(CellId cellId : cellIJ.getChildrenCellDependencies())
             {
 
-                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndex(cellId);
-                //TODO: maybe store dependencies to cells not cell_ids
-                Cell cell = matrix.getElement(cellIndexes.getFirst(), cellIndexes.getSecond());
+                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cellId);
+                Cell cell = matrix.getElement(cellId);
                 cell.getParentCellDependencies().add(cellIJ.getCellId());
                 cell.getParentCellDependencies().addAll(cellIJ.getParentCellDependencies());
                 int deepValue = visited[cellIndexes.getFirst()][cellIndexes.getSecond()];
@@ -154,7 +104,7 @@ public class Table
                 // The deep 0 means cell is not analyzed yet, so it's a not a cycle dependencies.
                 if(deepValue < deep && deepValue != 0)
                 {
-                    throw new Exception("Cycle dependencies");
+                    throw new Exception("Detected cycle dependencies");
                 }
                 else
                 {
@@ -181,7 +131,7 @@ public class Table
                 }
                 catch(Exception e)
                 {
-                    log.error("Cycle dependencies of the cell " + matrix.getElement(i,j).getCellId());
+                    log.error("Detected cycle dependencies of the cell " + matrix.getElement(i,j).getCellId(), e);
                 }
             }
         }
@@ -218,11 +168,11 @@ public class Table
         }
     }
 
-    /**
-     * Return calculated out cell value.
+     /**
+     * Return calculated output cell value.
      * @param i row cell.
      * @param j column cell.
-     * @param childDependencyValues
+     * @param childDependencyValues map of the children (string cell id - calculated string value) information.
      * @return string value.
      */
     private String calculateCell(int i, int j, Map<String, String> childDependencyValues)
@@ -237,14 +187,14 @@ public class Table
 
             for(CellId childrenCellId : currentCell.getChildrenCellDependencies())
             {
-                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndex(childrenCellId);
+                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndexes(childrenCellId);
                 if(childDependencyValues.get(childrenCellId.toString()) == null)
                 {
                     childDependencyValues.put(childrenCellId.toString(), calculateCell(childrenCellIndex.getFirst(), childrenCellIndex.getSecond(), childDependencyValues));
                 }
             }
             currentCell.calculateValue(childDependencyValues);
-            childDependencyValues.put(currentCell.getCellId().toString(), currentCell.getExpression().getCalculated().getStringValue());
+            childDependencyValues.put(currentCell.getCellId().toString(), currentCell.getValue());
             return currentCell.getValue();
         }
         else

@@ -61,7 +61,7 @@ public class CellTest
         childrenCellDependancies = new TreeSet();
         cell.setStringValue(INTEGER_STRING);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.POSITIVE_NUMBER, cell.getType());
         assertEquals(ErrorMessage.NO_ERROR, cell.getError());
@@ -72,7 +72,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(INTEGER_STRING_2);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.POSITIVE_NUMBER, cell.getType());
         assertEquals(ErrorMessage.NO_ERROR, cell.getError());
@@ -83,7 +83,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(NEG_INTEGER_STRING);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.NEGATIVE_VALUE, cell.getError());
@@ -94,7 +94,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(NEG_INTEGER_STRING_2);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.NEGATIVE_VALUE, cell.getError());
@@ -105,7 +105,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(WRONG_INTEGER);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -116,7 +116,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(REFERENCE);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -127,7 +127,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(NEG_REFERENCE);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -138,7 +138,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(REFERENCE_2);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -149,7 +149,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(NEG_REFERENCE_2);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -160,7 +160,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(WRONG_REFERENCE);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -171,7 +171,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(STRING);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.STRING, cell.getType());
         assertEquals(ErrorMessage.NO_ERROR, cell.getError());
@@ -182,7 +182,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(WRONG_STRING);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -193,7 +193,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(STRING_NULL);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.NULL, cell.getType());
         assertEquals(ErrorMessage.NO_ERROR, cell.getError());
@@ -204,7 +204,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(SIMPLE_EXPRESSION);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.getExpression().calculate(data);
 //                .getStringValue();
         cell.calculateValue(data);
@@ -217,7 +217,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(WRONG_EXPRESSION);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -228,7 +228,7 @@ public class CellTest
         cell = new Cell(0, 0);
         cell.setStringValue(WRONG_EXPRESSION_2);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.calculateValue(data);
         assertEquals(CellType.ERROR, cell.getType());
         assertEquals(ErrorMessage.FORMAT_ERROR, cell.getError());
@@ -241,7 +241,7 @@ public class CellTest
         childrenCellDependancies.add(new CellId("A1"));
         cell.setStringValue(REFERENCE_NEGATIVE_EXPRESSION);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.getExpression().calculate(data);
 //        .getStringValue();
         cell.calculateValue(data);
@@ -256,7 +256,7 @@ public class CellTest
         childrenCellDependancies.add(new CellId("A1"));
         cell.setStringValue(REFERENCE_EXPRESSION);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.getExpression().calculate(data);
 //        .getStringValue();
         cell.calculateValue(data);
@@ -274,7 +274,7 @@ public class CellTest
         childrenCellDependancies.add(new CellId("D2"));
         cell.setStringValue(CHILDREN_DEPENDENCIES_EXPRESSION);
         cell.initType();
-        cell.initChildrenCellDependancies();
+        cell.initChildrenCellDependencies();
         cell.getExpression().calculate(data);
 //        .getStringValue();
         cell.calculateValue(data);

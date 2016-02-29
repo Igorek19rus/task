@@ -25,34 +25,14 @@ public class DynamicMatrix
         }
     }
 
-    /**
-     * Get dynamic matrix.
-     *
-     * @return dynamic matrix.
-     */
-    public List<List<Cell>> getCells()
-    {
-        return cells;
-    }
-
     public int getRowSize()
     {
         return rowSize;
     }
 
-    public void setRowSize(int rowSize)
-    {
-        this.rowSize = rowSize;
-    }
-
     public int getColumnSize()
     {
         return columnSize;
-    }
-
-    public void setColumnSize(int columnSize)
-    {
-        this.columnSize = columnSize;
     }
 
     /**
@@ -75,10 +55,11 @@ public class DynamicMatrix
      */
     public Cell getElement(CellId cellId)
     {
-        Pair<Integer, Integer> cellIdToIndex = CellId.cellIdToIndex(cellId);
+        Pair<Integer, Integer> cellIdToIndex = CellId.cellIdToIndexes(cellId);
         return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());
     }
 
+    //TODO: delete
     public String printTableIndex()
     {
         StringBuilder tableIndexBuilder = new StringBuilder("");
@@ -110,6 +91,7 @@ public class DynamicMatrix
             }
             builder.append("\n");
         }
+        // TODO: delete
 //        for(int i = 0; i < getRowSize(); i++)
 //        {
 //            for(int j = 0; j < columnSize; j++)
@@ -121,6 +103,7 @@ public class DynamicMatrix
         return builder.toString();
     }
 
+    // TODO: delete
     public String printStringValueTable()
     {
         StringBuilder builder = new StringBuilder("");
@@ -142,6 +125,7 @@ public class DynamicMatrix
         return builder.toString();
     }
 
+    // TODO: delete
     public void printTableType()
     {
         StringBuilder builder = new StringBuilder("");
@@ -157,6 +141,7 @@ public class DynamicMatrix
         System.out.println(builder);
     }
 
+    // TODO: delete
     public void showChildrenCellDependancies()
     {
         System.out.println("Show children cell dependencies");
@@ -169,6 +154,7 @@ public class DynamicMatrix
         }
     }
 
+    // TODO: delete
     public void showParentCellDependancies()
     {
         System.out.println("Show parent cell dependencies");

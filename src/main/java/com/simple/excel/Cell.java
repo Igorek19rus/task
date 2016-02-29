@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 
+/**
+ * Table cell.
+ */
 public class Cell
 {
     private static Logger log = LogManager.getLogger(Table.class);
@@ -17,11 +20,6 @@ public class Cell
     private Expression expression;
     private Set<CellId> childrenCellDependencies = new TreeSet();
     private Set<CellId> parentCellDependencies = new TreeSet();
-
-//    public Cell(int row, char col)
-//    {
-//        cellId = new CellId(row, col);
-//    }
 
     public Cell(final String cellId)
     {
@@ -39,23 +37,13 @@ public class Cell
         return error;
     }
 
-    public void setError(ErrorMessage error)
-    {
-        this.error = error;
-    }
-
+    /**
+     * Get output cell value.
+     * @return output cell value.
+     */
     public String getValue()
     {
         return value;
-    }
-
-    public void setValue(String value)
-    {
-        if(value == null)
-        {
-            throw new NullPointerException("Can not set null value.");
-        }
-        this.value = value;
     }
 
     public CellId getCellId()
@@ -63,14 +51,22 @@ public class Cell
         return cellId;
     }
 
+    /**
+     * Get input cell value.
+     * @return input cell value.
+     */
     public String getStringValue()
     {
         return stringValue;
     }
 
+    /**
+     * Set input string value.
+     * @param stringValue output string value.
+     */
     public void setStringValue(String stringValue)
     {
-        this.stringValue = stringValue;
+        this.stringValue = stringValue.trim();
     }
 
     public CellType getType()
@@ -130,7 +126,7 @@ public class Cell
             }
             catch(Exception e)
             {
-                log.info("Error integer parsing : " + expression.getCalculated().getStringValue());
+                log.info("Error integer parsing : " + expression.getCalculated().getStringValue(), e);
                 setErrorType(ErrorMessage.FORMAT_ERROR);
                 return;
             }
@@ -150,7 +146,7 @@ public class Cell
         }
         else if(type.equals(CellType.STRING))
         {
-            value = stringValue.substring(1);
+            value = stringValue.substring(1).trim();
             return;
         }
         else if(type.equals(CellType.ERROR))
@@ -195,7 +191,7 @@ public class Cell
                 }
             }catch(NumberFormatException ex)
             {
-                throw new FormatErrorException(ex);
+                throw new FormatErrorException("Error integer parsing.", ex);
             }
             setErrorType(ErrorMessage.NEGATIVE_VALUE);
             return;
@@ -227,7 +223,7 @@ public class Cell
     private void initExpressionTypeCell()
     {
         expression = new ExpressionImpl(stringValue);
-        initChildrenCellDependancies();
+        initChildrenCellDependencies();
         error = ErrorMessage.NO_ERROR;
         type = CellType.EXPRESSION;
     }
@@ -246,7 +242,7 @@ public class Cell
         value = error.getError();
     }
 
-    public void initChildrenCellDependancies()
+    public void initChildrenCellDependencies()
     {
         if(expression != null)
         {
@@ -268,6 +264,7 @@ public class Cell
         this.expression = expression;
     }
 
+    // TODO : delete
     public void showChildrenDependencies()
     {
         System.out.print(cellId + ": ");
@@ -277,7 +274,7 @@ public class Cell
         }
         System.out.println();
     }
-
+    // TODO : delete
     public void showParentDependencies()
     {
         System.out.print(cellId + ": ");
@@ -286,11 +283,6 @@ public class Cell
             System.out.print("{" + c + "}");
         }
         System.out.println();
-    }
-
-    public static void main(String[] args)
-    {
-
     }
 
     @Override

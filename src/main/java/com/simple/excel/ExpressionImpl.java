@@ -125,7 +125,7 @@ public class ExpressionImpl implements Expression
                 }
                 catch(Exception ex)
                 {
-                    throw new FormatErrorException("Parse term exception");
+                    throw new FormatErrorException("Parse term exception", ex);
                 }
                 Operation op = parseOperation(sTmp.getStringValue().charAt(0));
                 switch(op)
