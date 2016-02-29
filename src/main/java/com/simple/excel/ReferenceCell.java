@@ -1,18 +1,21 @@
 package com.simple.excel;
 
 /**
- * Created by igor on 25.02.16.
+ * Represents the reference cell type of term.
  */
-public class ReferenceCell {
+public class ReferenceCell
+{
 
     String value;
 
-    public ReferenceCell(String value) {
+    public ReferenceCell(String value)
+    {
         this.value = value;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return value;
     }
 

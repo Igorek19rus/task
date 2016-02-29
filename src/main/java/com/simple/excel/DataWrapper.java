@@ -1,23 +1,24 @@
 package com.simple.excel;
 
-/**
- * Created by igor on 25.02.16.
- */
-public class DataWrapper<T> {
+public class DataWrapper<T>
+{
 
     private Class<T> clazz;
     private String stringValue;
 
-    public DataWrapper(Class clazz, String stringValue) {
+    public DataWrapper(Class clazz, String stringValue)
+    {
         this.clazz = clazz;
-        this.stringValue = stringValue;
+        this.stringValue = stringValue.trim();
     }
 
-    public Class getClazz() {
+    public Class getClazz()
+    {
         return clazz;
     }
 
-    public String getStringValue() {
+    public String getStringValue()
+    {
         return stringValue;
     }
 

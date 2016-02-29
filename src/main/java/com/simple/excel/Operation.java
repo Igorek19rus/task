@@ -1,17 +1,16 @@
 package com.simple.excel;
 
-/**
- * Created by igor on 25.02.16.
- */
-public enum Operation {
-    ADDITION('+'),
+public enum Operation
+{
     SUBSTRACTION('-'),
+    ADDITION('+'),
     MULTIPLICATION('*'),
     DIVISION('/');
 
     private char operation;
 
-    Operation(final char operation) {
+    Operation(final char operation)
+    {
         this.operation = operation;
     }
 
@@ -20,7 +19,8 @@ public enum Operation {
         return operation;
     }
 
-    public static Operation parseOperation(final char op) {
+    public static Operation parseOperation(final char op)
+    {
         switch(op)
         {
             case '+':
@@ -44,6 +44,7 @@ public enum Operation {
 
     /**
      * Returns priority operation.
+     *
      * @param op char of operation.
      * @return byte operation priority.
      */

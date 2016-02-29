@@ -13,7 +13,8 @@ public class CellIdTest
     final int columnStringIndex = 5;
 
     @Test
-    public void parseCellId() {
+    public void parseCellId()
+    {
         Pair<Character, Integer> cellIdLabel;
         Integer rowLabel;
         Character columnLabel;
@@ -41,14 +42,6 @@ public class CellIdTest
         rowLabel = cellIdLabel.getSecond();
         assertEquals((Integer) Integer.parseInt(F33.substring(1)), rowLabel);
         assertEquals((Character) F33.charAt(0), columnLabel);
-
-//        cellId = new CellId(F33);
-//        Pair<Integer, Integer> cellIndex = CellId.cellIdToIndex(rowStringIndex, columnStringIndex);
-//        rowIndex = cellIndex.getFirst();
-//        columnIndex = cellIndex.getSecond();
-//        assertEquals(new Integer(rowStringIndex), rowIndex);
-//        assertEquals(new Integer(columnStringIndex), columnIndex);
-
     }
 
 }
