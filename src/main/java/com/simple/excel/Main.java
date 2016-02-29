@@ -1,11 +1,13 @@
 package com.simple.excel;
 
+import java.text.DecimalFormat;
+
 public class Main
 {
 
     public static String FORMULA = "=82*A2+3*s2+A2*3";
     public static String TABLE_DATA1 = "3\t5\n"
-            + "=B2\t1\t2\t3\t4\n"
+            + "=1+2\t=D1/2\t2\t3\t4\n"
             + "5\t=C2+D2+E2\t=A3\t=A3+B3\t=B3\n"
             + "6\t=A3\t7\t=8\t9";
     public static String TABLE_DATA2 = "3\t5\n"
@@ -45,57 +47,57 @@ public class Main
         table.calculationTable();
         System.out.println(table.getMatrix().printTable());
         System.out.println();
-
-        tableString = TABLE_DATA2;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA3;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA4;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA5;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA6;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
+        
+//        tableString = TABLE_DATA2;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+//
+//        tableString = TABLE_DATA3;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+//
+//        tableString = TABLE_DATA4;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+//
+//        tableString = TABLE_DATA5;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+//
+//        tableString = TABLE_DATA6;
+//        System.out.println(tableString);
+//        System.out.println("=====");
+//        table = new Table(tableString);
+//        table.buildDependencyTrees();
+//        table.resolveCycleDependencies();
+//        table.calculationTable();
+//        System.out.println(table.getMatrix().printTable());
+//        System.out.println();
+// TODO: delete
 //        tableString = SIMPLE_NULL_TABLE;
 //        System.out.println(tableString);
 //        System.out.println("=====");

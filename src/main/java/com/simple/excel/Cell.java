@@ -3,6 +3,7 @@ package com.simple.excel;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -120,8 +121,8 @@ public class Cell
                     expression.calculate(data);
                 }
 
-                Integer resInt = Integer.parseInt(expression.getCalculated().getStringValue());
-                value = resInt.toString();
+                Double resInt = Double.parseDouble(expression.getCalculated().getStringValue());
+                value = formatDouble(resInt);
                 return;
             }
             catch(Exception e)
@@ -133,10 +134,12 @@ public class Cell
         }
         else if(type.equals(CellType.POSITIVE_NUMBER))
         {
-            Integer resInt = Integer.parseInt(stringValue);
+            Double resInt = Double.parseDouble(stringValue);
             if(resInt > 0)
             {
-                value = resInt.toString();
+                DecimalFormat format = new DecimalFormat();
+                format.setDecimalSeparatorAlwaysShown(false);
+                value = formatDouble(resInt);
             }
             else
             {
@@ -153,6 +156,12 @@ public class Cell
         {
             return;
         }
+    }
+
+    public static String formatDouble(final Double dbl) {
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(false);
+        return format.format(dbl);
     }
 
     /**

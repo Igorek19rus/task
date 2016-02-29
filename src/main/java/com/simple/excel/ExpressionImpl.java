@@ -3,6 +3,7 @@ package com.simple.excel;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,16 +113,16 @@ public class ExpressionImpl implements Expression
                 }
                 dB = stack.pop();
                 dA = stack.pop();
-                if(!dA.getClazz().equals(Integer.class) || !dB.getClazz().equals(Integer.class))
+                if (!Number.class.isAssignableFrom(dA.getClazz()) || !Number.class.isAssignableFrom(dB.getClazz()))
                 {
                     throw new FormatErrorException("Unsupported operation for types " + dA.getClazz() + " and " + dB.getClazz());
                 }
-                Integer dAInteger;
-                Integer dBInteger;
+                Double dAInteger;
+                Double dBInteger;
                 try
                 {
-                    dAInteger = (Integer) parseObjectFromString(dA);
-                    dBInteger = (Integer) parseObjectFromString(dB);
+                    dAInteger = (Double) parseObjectFromString(dA);
+                    dBInteger = (Double) parseObjectFromString(dB);
                 }
                 catch(Exception ex)
                 {
@@ -131,40 +132,40 @@ public class ExpressionImpl implements Expression
                 switch(op)
                 {
                     case ADDITION:
-                        dAInteger += dBInteger;
+                        dAInteger = dAInteger + dBInteger;
                         break;
                     case SUBSTRACTION:
-                        dAInteger -= dBInteger;
+                        dAInteger = dAInteger - dBInteger;
                         break;
                     case DIVISION:
                         if(dBInteger == 0)
                         {
                             throw new FormatErrorException("Division by 0.");
                         }
-                        dAInteger /= dBInteger;
+                        dAInteger = dAInteger / dBInteger;
                         break;
                     case MULTIPLICATION:
-                        dAInteger *= dBInteger;
+                        dAInteger = dAInteger * dBInteger;
                         break;
                     default:
                         throw new FormatErrorException("Unsupported_operation " + sTmp);
                 }
-                stack.push(new DataWrapper(Integer.class, dAInteger.toString()));
+                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dAInteger)));
             }
             else
             {
-                Integer dAInteger;
+                Double dAInteger;
                 if(sTmp.getClazz().equals(ReferenceCell.class))
                 {
                     dAInteger = sTmp.getStringValue().charAt(0) == Operation.SUBSTRACTION.getOperation() ?
-                            -1 * Integer.parseInt(data.get(sTmp.getStringValue().substring(1))) : Integer.parseInt(data.get(sTmp.getStringValue()));
+                            -1 * Double.parseDouble(data.get(sTmp.getStringValue().substring(1))) : Double.parseDouble(data.get(sTmp.getStringValue()));
                 }
                 else
                 {
-                    dAInteger = Integer.parseInt(sTmp.getStringValue());
+                    dAInteger = Double.parseDouble(sTmp.getStringValue());
                 }
 
-                stack.push(new DataWrapper(Integer.class, dAInteger.toString()));
+                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dAInteger)));
             }
         }
 
@@ -260,7 +261,7 @@ public class ExpressionImpl implements Expression
         }
         else if(findPattern(INTEGER_PATTERN, sInTrim))
         {
-            return Integer.class;
+            return Double.class;
         }
         else if(findPattern(REFERENCE_PATTERN, sInTrim))
         {
