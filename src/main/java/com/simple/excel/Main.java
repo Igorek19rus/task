@@ -47,7 +47,7 @@ public class Main
         table.calculationTable();
         System.out.println(table.getMatrix().printTable());
         System.out.println();
-        
+
 //        tableString = TABLE_DATA2;
 //        System.out.println(tableString);
 //        System.out.println("=====");

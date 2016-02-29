@@ -63,10 +63,10 @@ public class ExpressionImplTest
     {
         ExpressionImpl expression = new ExpressionImpl("");
         ;
-        assertEquals(Integer.class, expression.parseType(INTEGER_STRING));
-        assertEquals(Integer.class, expression.parseType(INTEGER_STRING_2));
-        assertEquals(Integer.class, expression.parseType(NEG_INTEGER_STRING));
-        assertEquals(Integer.class, expression.parseType(NEG_INTEGER_STRING_2));
+        assertEquals(Double.class, expression.parseType(INTEGER_STRING));
+        assertEquals(Double.class, expression.parseType(INTEGER_STRING_2));
+        assertEquals(Double.class, expression.parseType(NEG_INTEGER_STRING));
+        assertEquals(Double.class, expression.parseType(NEG_INTEGER_STRING_2));
         assertEquals(ReferenceCell.class, expression.parseType(REFERENCE));
         assertEquals(ReferenceCell.class, expression.parseType(REFERENCE_2));
         assertEquals(String.class, expression.parseType(STRING));
@@ -192,11 +192,11 @@ public class ExpressionImplTest
 //        =5+3-4
         expression = new ExpressionImpl(EXPRESSION_1);
         List<DataWrapper> result = new ArrayList();
-        result.add(new DataWrapper(Integer.class, "5"));
+        result.add(new DataWrapper(Double.class, "5"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
-        result.add(new DataWrapper(Integer.class, "3"));
+        result.add(new DataWrapper(Double.class, "3"));
         result.add(new DataWrapper(Operation.class, Operation.SUBSTRACTION.toString()));
-        result.add(new DataWrapper(Integer.class, "4"));
+        result.add(new DataWrapper(Double.class, "4"));
         List<DataWrapper> resultOfParsing = expression.parseExpression();
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < resultOfParsing.size(); i++)
@@ -209,13 +209,13 @@ public class ExpressionImplTest
         result = new ArrayList();
         result.add(new DataWrapper(ReferenceCell.class, "-A1"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
-        result.add(new DataWrapper(Integer.class, "3"));
+        result.add(new DataWrapper(Double.class, "3"));
         result.add(new DataWrapper(Operation.class, Operation.SUBSTRACTION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "A1"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "B11"));
         result.add(new DataWrapper(Operation.class, Operation.DIVISION.toString()));
-        result.add(new DataWrapper(Integer.class, "2"));
+        result.add(new DataWrapper(Double.class, "2"));
         result.add(new DataWrapper(Operation.class, Operation.MULTIPLICATION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "B1"));
         resultOfParsing = expression.parseExpression();
@@ -228,7 +228,7 @@ public class ExpressionImplTest
 //        =3
         expression = new ExpressionImpl(EXPRESSION_6);
         result = new ArrayList();
-        result.add(new DataWrapper(Integer.class, "3"));
+        result.add(new DataWrapper(Double.class, "3"));
         resultOfParsing = expression.parseExpression();
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
@@ -239,7 +239,7 @@ public class ExpressionImplTest
 //        =-3
         expression = new ExpressionImpl(EXPRESSION_3);
         result = new ArrayList();
-        result.add(new DataWrapper(Integer.class, "-3"));
+        result.add(new DataWrapper(Double.class, "-3"));
         resultOfParsing = expression.parseExpression();
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
@@ -278,32 +278,32 @@ public class ExpressionImplTest
 //            =5+3-4
         expression = new ExpressionImpl(EXPRESSION_1);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "4"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "4"), expression.getCalculated());
 
 //            =-A1+3-A1+B11/2*B1
         expression = new ExpressionImpl(EXPRESSION_2);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "12"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "12"), expression.getCalculated());
 
 //            =-3
         expression = new ExpressionImpl(EXPRESSION_3);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "-3"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "-3"), expression.getCalculated());
 
 //            =-A1
         expression = new ExpressionImpl(EXPRESSION_4);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "3"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "3"), expression.getCalculated());
 
 //            =A1
         expression = new ExpressionImpl(EXPRESSION_5);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "-3"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "-3"), expression.getCalculated());
 
 //            =3
         expression = new ExpressionImpl(EXPRESSION_6);
         expression.calculate(data);
-        assertEquals(new DataWrapper(Integer.class, "3"), expression.getCalculated());
+        assertEquals(new DataWrapper(Double.class, "3"), expression.getCalculated());
     }
 
     @Test(expected = FormatErrorException.class)
