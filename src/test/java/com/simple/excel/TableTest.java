@@ -58,7 +58,7 @@ public class TableTest
     {
         Table table;
         Table tableToCompare;
-        String resultSimpleTable = "8\t-7\trt\t-26\t-26\n5\t26\t6\t12\t6\n6\t6\t8\t8\t#negative_value";
+        String resultSimpleTable = "8\t-7\trt\t-26\t-26\n5\t26\t6\t12\t6\n6\t6\t8\t8\t#negative_number";
         String resultCycleTable = "#cycle_dependencies\t1\t2\t1\t4\n" +
                 "5\t#cycle_dependencies\t#cycle_dependencies\t#cycle_dependencies\t#cycle_dependencies\n" +
                 "#cycle_dependencies\t#cycle_dependencies\t7\t8\t9";
@@ -71,7 +71,6 @@ public class TableTest
         table.buildDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
-        assertEquals(SIMPLE_TABLE.substring(4), table.getMatrix().printStringValueTable());
         for(int i = 0; i < table.getMatrix().getRowSize(); i++)
         {
             for(int j = 0; j < table.getMatrix().getColumnSize(); j++)
@@ -86,7 +85,6 @@ public class TableTest
         table = new Table(CYCLE_TABLE);
         tableToCompare = new Table(CYCLE_TABLE);
         constructCycleTableCellTypes(tableToCompare);
-        assertEquals(CYCLE_TABLE.substring(4), table.getMatrix().printStringValueTable());
         for(int i = 0; i < table.getMatrix().getRowSize(); i++)
         {
             for(int j = 0; j < table.getMatrix().getColumnSize(); j++)
@@ -247,16 +245,5 @@ public class TableTest
 
         curCell = table.getMatrix().getElement(new Cell.CellId("B3"));
         curCell.getChildrenCellDependencies().add(new Cell.CellId("A3"));
-    }
- // TODO delete
-    public void childrenDependenciesTableTest()
-    {
-
-    }
-
-// TODO delete
-    public void tableCellTypeTest()
-    {
-
     }
 }

@@ -278,27 +278,6 @@ public class Cell
         this.expression = expression;
     }
 
-    // TODO : delete
-    public void showChildrenDependencies()
-    {
-        System.out.print(cellId + ": ");
-        for(CellId c : childrenCellDependencies)
-        {
-            System.out.print("{" + c + "}");
-        }
-        System.out.println();
-    }
-    // TODO : delete
-    public void showParentDependencies()
-    {
-        System.out.print(cellId + ": ");
-        for(CellId c : parentCellDependencies)
-        {
-            System.out.print("{" + c + "}");
-        }
-        System.out.println();
-    }
-
     @Override
     public boolean equals(final Object o)
     {

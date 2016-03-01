@@ -269,28 +269,6 @@ public class Table
             return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());
         }
 
-        //TODO: delete
-        public String printTableIndex()
-        {
-            StringBuilder tableIndexBuilder = new StringBuilder("");
-            for(int i = 0; i < getRowSize(); i++)
-            {
-                for(int j = 0; j < getColumnSize(); j++)
-                {
-                    tableIndexBuilder.append(getElement(i, j).getCellId());
-                    if(j != getColumnSize() - 1)
-                    {
-                        tableIndexBuilder.append("\t");
-                    }
-                }
-                if(i != getRowSize() - 1)
-                {
-                    tableIndexBuilder.append("\n");
-                }
-            }
-            return tableIndexBuilder.toString();
-        }
-
         public String printTable()
         {
             StringBuilder builder = new StringBuilder();
@@ -303,70 +281,6 @@ public class Table
             }
             builder.delete(builder.length() - 1, builder.length());
             return builder.toString();
-        }
-
-        // TODO: delete
-        public String printStringValueTable()
-        {
-            StringBuilder builder = new StringBuilder("");
-            for(int i = 0; i < getRowSize(); i++)
-            {
-                for(int j = 0; j < getColumnSize(); j++)
-                {
-                    builder.append(getElement(i, j).getOriginalValue());
-                    if(j != getColumnSize() - 1)
-                    {
-                        builder.append("\t");
-                    }
-                }
-                if(i != getRowSize() - 1)
-                {
-                    builder.append("\n");
-                }
-            }
-            return builder.toString();
-        }
-
-        // TODO: delete
-        public void printTableType()
-        {
-            StringBuilder builder = new StringBuilder("");
-            for(int i = 0; i < getRowSize(); i++)
-            {
-                for(int j = 0; j < getColumnSize(); j++)
-                {
-                    builder.append(getElement(i, j).getType());
-                    builder.append("\t");
-                }
-                builder.append("\n");
-            }
-            System.out.println(builder);
-        }
-
-        // TODO: delete
-        public void showChildrenCellDependancies()
-        {
-            System.out.println("Show children cell dependencies");
-            for(int i = 0; i < getRowSize(); i++)
-            {
-                for(int j = 0; j < getColumnSize(); j++)
-                {
-                    getElement(i, j).showChildrenDependencies();
-                }
-            }
-        }
-
-        // TODO: delete
-        public void showParentCellDependancies()
-        {
-            System.out.println("Show parent cell dependencies");
-            for(int i = 0; i < getRowSize(); i++)
-            {
-                for(int j = 0; j < getColumnSize(); j++)
-                {
-                    getElement(i, j).showParentDependencies();
-                }
-            }
         }
     }
 }

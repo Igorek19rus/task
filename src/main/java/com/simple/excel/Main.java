@@ -93,31 +93,5 @@ public class Main
         table.calculationTable();
         System.out.println(table.getMatrix().printTable());
         System.out.println();
-// TODO: delete
-//        tableString = SIMPLE_NULL_TABLE;
-//        System.out.println(tableString);
-//        System.out.println("=====");
-//        table = new Table(tableString);
-//        table.buildDependencyTrees();
-//        table.resolveCycleDependencies();
-//        table.calculationTable();
-//        System.out.println(table.getMatrix().printTable());
-//        System.out.println();
-
-
-//        System.out.println(tableString);
-//        System.out.println("=====");
-//        table = new Table(tableString);
-////        table.initTable(tableString);
-//        //TODO: how much time parsing of expressions is called? 2
-//        table.buildDependencyTrees();
-//        table.resolveCycleDependencies();
-////        System.out.println(table.getMatrix().printStringValueTable());
-    //        table.calculationTable();
-    //        System.out.println(table.getMatrix().printTable());
-    ////        table.getMatrix().printTableType();
-    ////        System.out.println(table.getMatrix().printTableIndex());
-    ////        table.getMatrix().showChildrenCellDependancies();
-    ////        table.getMatrix().showParentCellDependancies();
     }
 }

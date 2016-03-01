@@ -29,8 +29,6 @@
         <priority>4</priority>
     </rule>
     <rule ref="rulesets/java/controversial.xml/BooleanInversion"/>
-    <!--todo uncomment it?-->
-    <!--<rule ref="rulesets/java/coupling.xml/CouplingBetweenObjects"/>-->
     <rule ref="rulesets/java/design.xml">
         <exclude name="ConfusingTernary"/>
         <exclude name="AvoidSynchronizedAtMethodLevel"/>
