@@ -61,96 +61,86 @@ public class ExpressionImplTest
     @Test
     public void parseTypeTest() throws Exception
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        ;
-        assertEquals(Double.class, expression.parseType(INTEGER_STRING));
-        assertEquals(Double.class, expression.parseType(INTEGER_STRING_2));
-        assertEquals(Double.class, expression.parseType(NEG_INTEGER_STRING));
-        assertEquals(Double.class, expression.parseType(NEG_INTEGER_STRING_2));
-        assertEquals(ReferenceCell.class, expression.parseType(REFERENCE));
-        assertEquals(ReferenceCell.class, expression.parseType(REFERENCE_2));
-        assertEquals(String.class, expression.parseType(STRING));
+        assertEquals(Double.class, ExpressionImpl.Parser.parseType(INTEGER_STRING));
+        assertEquals(Double.class, ExpressionImpl.Parser.parseType(INTEGER_STRING_2));
+        assertEquals(Double.class, ExpressionImpl.Parser.parseType(NEG_INTEGER_STRING));
+        assertEquals(Double.class, ExpressionImpl.Parser.parseType(NEG_INTEGER_STRING_2));
+        assertEquals(ReferenceCell.class, ExpressionImpl.Parser.parseType(REFERENCE));
+        assertEquals(ReferenceCell.class, ExpressionImpl.Parser.parseType(REFERENCE_2));
+        assertEquals(String.class, ExpressionImpl.Parser.parseType(STRING));
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongStringTypeTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(WRONG_STRING);
+        ExpressionImpl.Parser.parseType(WRONG_STRING);
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongStringNullTypeTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(STRIN_NULL);
+        ExpressionImpl.Parser.parseType(STRIN_NULL);
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongIntegerTypeTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(WRONG_INTEGER);
+        ExpressionImpl.Parser.parseType(WRONG_INTEGER);
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongReferenceTypeTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(WRONG_REFERENCE);
+        ExpressionImpl.Parser.parseType(WRONG_REFERENCE);
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongExpressionTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(WRONG_EXPRESSION);
+        ExpressionImpl.Parser.parseType(WRONG_EXPRESSION);
     }
 
     @Test(expected = FormatErrorException.class)
     public void parseWrongExpressionTest2()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
-        expression.parseType(WRONG_EXPRESSION_2);
+        ExpressionImpl.Parser.parseType(WRONG_EXPRESSION_2);
     }
 
     @Test
     public void findPatternTest()
     {
-        ExpressionImpl expression = new ExpressionImpl("");
+        assertTrue(ExpressionImpl.Parser.findPattern(STRING_PATTERN, STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, STRIN_NULL));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, NEG_REFERENCE_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, NEG_REFERENCE));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, REFERENCE));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, REFERENCE_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, INTEGER_STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, INTEGER_STRING_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, NEG_INTEGER_STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, NEG_INTEGER_STRING_2));
 
-        assertTrue(expression.findPattern(STRING_PATTERN, STRING));
-        assertFalse(expression.findPattern(STRING_PATTERN, STRIN_NULL));
-        assertFalse(expression.findPattern(STRING_PATTERN, NEG_REFERENCE_2));
-        assertFalse(expression.findPattern(STRING_PATTERN, NEG_REFERENCE));
-        assertFalse(expression.findPattern(STRING_PATTERN, REFERENCE));
-        assertFalse(expression.findPattern(STRING_PATTERN, REFERENCE_2));
-        assertFalse(expression.findPattern(STRING_PATTERN, INTEGER_STRING));
-        assertFalse(expression.findPattern(STRING_PATTERN, INTEGER_STRING_2));
-        assertFalse(expression.findPattern(STRING_PATTERN, NEG_INTEGER_STRING));
-        assertFalse(expression.findPattern(STRING_PATTERN, NEG_INTEGER_STRING_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, STRIN_NULL));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, NEG_REFERENCE_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, NEG_REFERENCE));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, REFERENCE));
+        assertFalse(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, REFERENCE_2));
+        assertTrue(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, INTEGER_STRING));
+        assertTrue(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, INTEGER_STRING_2));
+        assertTrue(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, NEG_INTEGER_STRING));
+        assertTrue(ExpressionImpl.Parser.findPattern(INTEGER_PATTERN, NEG_INTEGER_STRING_2));
 
-        assertFalse(expression.findPattern(INTEGER_PATTERN, STRING));
-        assertFalse(expression.findPattern(INTEGER_PATTERN, STRIN_NULL));
-        assertFalse(expression.findPattern(INTEGER_PATTERN, NEG_REFERENCE_2));
-        assertFalse(expression.findPattern(INTEGER_PATTERN, NEG_REFERENCE));
-        assertFalse(expression.findPattern(INTEGER_PATTERN, REFERENCE));
-        assertFalse(expression.findPattern(INTEGER_PATTERN, REFERENCE_2));
-        assertTrue(expression.findPattern(INTEGER_PATTERN, INTEGER_STRING));
-        assertTrue(expression.findPattern(INTEGER_PATTERN, INTEGER_STRING_2));
-        assertTrue(expression.findPattern(INTEGER_PATTERN, NEG_INTEGER_STRING));
-        assertTrue(expression.findPattern(INTEGER_PATTERN, NEG_INTEGER_STRING_2));
-
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, STRING));
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, STRIN_NULL));
-        assertTrue(expression.findPattern(REFERENCE_PATTERN, NEG_REFERENCE_2));
-        assertTrue(expression.findPattern(REFERENCE_PATTERN, NEG_REFERENCE));
-        assertTrue(expression.findPattern(REFERENCE_PATTERN, REFERENCE));
-        assertTrue(expression.findPattern(REFERENCE_PATTERN, REFERENCE_2));
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, INTEGER_STRING));
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, INTEGER_STRING_2));
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, NEG_INTEGER_STRING));
-        assertFalse(expression.findPattern(REFERENCE_PATTERN, NEG_INTEGER_STRING_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, STRIN_NULL));
+        assertTrue(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, NEG_REFERENCE_2));
+        assertTrue(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, NEG_REFERENCE));
+        assertTrue(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, REFERENCE));
+        assertTrue(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, REFERENCE_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, INTEGER_STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, INTEGER_STRING_2));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, NEG_INTEGER_STRING));
+        assertFalse(ExpressionImpl.Parser.findPattern(REFERENCE_PATTERN, NEG_INTEGER_STRING_2));
     }
 
     @Test
@@ -187,17 +177,14 @@ public class ExpressionImplTest
     @Test
     public void parseExpressionTest()
     {
-        ExpressionImpl expression;
-
 //        =5+3-4
-        expression = new ExpressionImpl(EXPRESSION_1);
         List<DataWrapper> result = new ArrayList();
         result.add(new DataWrapper(Double.class, "5"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
         result.add(new DataWrapper(Double.class, "3"));
         result.add(new DataWrapper(Operation.class, Operation.SUBSTRACTION.toString()));
         result.add(new DataWrapper(Double.class, "4"));
-        List<DataWrapper> resultOfParsing = expression.parseExpression();
+        List<DataWrapper> resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_1);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < resultOfParsing.size(); i++)
         {
@@ -205,7 +192,6 @@ public class ExpressionImplTest
         }
 
 //        =-A1+3-A1+B11/2*B1
-        expression = new ExpressionImpl(EXPRESSION_2);
         result = new ArrayList();
         result.add(new DataWrapper(ReferenceCell.class, "-A1"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
@@ -218,7 +204,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(Double.class, "2"));
         result.add(new DataWrapper(Operation.class, Operation.MULTIPLICATION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "B1"));
-        resultOfParsing = expression.parseExpression();
+        resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_2);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
         {
@@ -226,10 +212,9 @@ public class ExpressionImplTest
         }
 
 //        =3
-        expression = new ExpressionImpl(EXPRESSION_6);
         result = new ArrayList();
         result.add(new DataWrapper(Double.class, "3"));
-        resultOfParsing = expression.parseExpression();
+        resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_6);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
         {
@@ -237,10 +222,9 @@ public class ExpressionImplTest
         }
 
 //        =-3
-        expression = new ExpressionImpl(EXPRESSION_3);
         result = new ArrayList();
         result.add(new DataWrapper(Double.class, "-3"));
-        resultOfParsing = expression.parseExpression();
+        resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_3);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
         {
@@ -248,10 +232,9 @@ public class ExpressionImplTest
         }
 
 //        =A1
-        expression = new ExpressionImpl(EXPRESSION_5);
         result = new ArrayList();
         result.add(new DataWrapper(ReferenceCell.class, "A1"));
-        resultOfParsing = expression.parseExpression();
+        resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_5);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
         {
@@ -259,10 +242,9 @@ public class ExpressionImplTest
         }
 
 //        =-A1
-        expression = new ExpressionImpl(EXPRESSION_4);
         result = new ArrayList();
         result.add(new DataWrapper(ReferenceCell.class, "-A1"));
-        resultOfParsing = expression.parseExpression();
+        resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_4);
         assertEquals(result.size(), resultOfParsing.size());
         for(int i = 0; i < result.size(); i++)
         {
@@ -330,7 +312,7 @@ public class ExpressionImplTest
     @Test
     public void parseDependenciesTest()
     {
-        Set<CellId> dependencies;
+        Set<Cell.CellId> dependencies;
         ExpressionImpl expression;
 
 //            =5+3-4
@@ -341,9 +323,9 @@ public class ExpressionImplTest
 //            =-A1+3-A1+B11/2*B1
         dependencies = new TreeSet();
         expression = new ExpressionImpl(EXPRESSION_2);
-        dependencies.add(new CellId("A1"));
-        dependencies.add(new CellId("B1"));
-        dependencies.add(new CellId("B11"));
+        dependencies.add(new Cell.CellId("A1"));
+        dependencies.add(new Cell.CellId("B1"));
+        dependencies.add(new Cell.CellId("B11"));
         assertEquals(dependencies, expression.parseDependencies());
 
 //            =-3
@@ -354,13 +336,13 @@ public class ExpressionImplTest
 //            =-A1
         dependencies = new TreeSet();
         expression = new ExpressionImpl(EXPRESSION_4);
-        dependencies.add(new CellId("A1"));
+        dependencies.add(new Cell.CellId("A1"));
         assertEquals(dependencies, expression.parseDependencies());
 
 //            =A1
         dependencies = new TreeSet();
         expression = new ExpressionImpl(EXPRESSION_5);
-        dependencies.add(new CellId("a1"));
+        dependencies.add(new Cell.CellId("a1"));
         assertEquals(dependencies, expression.parseDependencies());
 
 //            =3

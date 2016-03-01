@@ -3,7 +3,9 @@ package com.simple.excel;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Table
@@ -37,7 +39,7 @@ public class Table
 
         matrix = new DynamicMatrix(rowSize, colSize);
 
-        Map<String, String> nullData = new HashMap<String, String>();
+        Map<String, String> noDependencies = new HashMap<String, String>();
         try {
             for (int k1 = 0; k1 < rowSize; k1++) {
                 String[] cellsInRow = rows[k1 + 1].split(cellPattern);
@@ -47,11 +49,11 @@ public class Table
                 }
                 for (int k2 = 0; k2 < colSize; k2++) {
                     Cell curCell = matrix.getElement(k1, k2);
-                    curCell.setStringValue(cellsInRow[k2]);
+                    curCell.setOriginalValue(cellsInRow[k2]);
                     curCell.initType();
 
-                    if (!curCell.getType().equals(CellType.EXPRESSION)) {
-                        curCell.calculateValue(nullData);
+                    if (!curCell.getType().equals(Cell.CellType.EXPRESSION)) {
+                        curCell.calculateValue(noDependencies);
                     }
                 }
             }
@@ -77,15 +79,14 @@ public class Table
      */
     private void analyse(final int deep, final int visited[][], final int i, final int j) throws Exception
     {
-        //TODO: do smth with the 2d array.
         visited[i][j] = deep;
         Cell cellIJ = matrix.getElement(i, j);
-        if(cellIJ.getType().equals(CellType.EXPRESSION))
+        if(cellIJ.getType().equals(Cell.CellType.EXPRESSION))
         {
-            for(CellId cellId : cellIJ.getChildrenCellDependencies())
+            for(Cell.CellId cellId : cellIJ.getChildrenCellDependencies())
             {
 
-                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cellId);
+                Pair<Integer, Integer> cellIndexes = Cell.CellId.cellIdToIndexes(cellId);
                 Cell cell = matrix.getElement(cellId);
                 cell.getParentCellDependencies().add(cellIJ.getCellId());
                 cell.getParentCellDependencies().addAll(cellIJ.getParentCellDependencies());
@@ -113,7 +114,6 @@ public class Table
         {
             for(int j = 0; j < matrix.getColumnSize(); j++)
             {
-                // TODO: Change on List<List>
                 int[][] visited = new int[matrix.getRowSize()][matrix.getColumnSize()];
                 try
                 {
@@ -149,9 +149,9 @@ public class Table
             {
                 if(isCycleDependencies(i, j))
                 {
-                    for(CellId cellId : matrix.getElement(i, j).getParentCellDependencies())
+                    for(Cell.CellId cellId : matrix.getElement(i, j).getParentCellDependencies())
                     {
-                        matrix.getElement(cellId).setErrorType(ErrorMessage.CYCLE_DEPENDENCIES);
+                        matrix.getElement(cellId).setErrorType(Cell.ErrorMessage.CYCLE_DEPENDENCIES);
                     }
                 }
             }
@@ -172,24 +172,24 @@ public class Table
             throw new ArrayIndexOutOfBoundsException("Out of bound exception.");
         }
         Cell currentCell = matrix.getElement(i, j);
-        if(currentCell.getType().equals(CellType.EXPRESSION))
+        if(currentCell.getType().equals(Cell.CellType.EXPRESSION))
         {
 
-            for(CellId childrenCellId : currentCell.getChildrenCellDependencies())
+            for(Cell.CellId childrenCellId : currentCell.getChildrenCellDependencies())
             {
-                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndexes(childrenCellId);
+                final Pair<Integer, Integer> childrenCellIndex = Cell.CellId.cellIdToIndexes(childrenCellId);
                 if(childDependencyValues.get(childrenCellId.toString()) == null)
                 {
                     childDependencyValues.put(childrenCellId.toString(), calculateCell(childrenCellIndex.getFirst(), childrenCellIndex.getSecond(), childDependencyValues));
                 }
             }
             currentCell.calculateValue(childDependencyValues);
-            childDependencyValues.put(currentCell.getCellId().toString(), currentCell.getValue());
-            return currentCell.getValue();
+            childDependencyValues.put(currentCell.getCellId().toString(), currentCell.getResultValue());
+            return currentCell.getResultValue();
         }
         else
         {
-            return currentCell.getValue();
+            return currentCell.getResultValue();
         }
     }
 
@@ -204,7 +204,7 @@ public class Table
             for(int j = 0; j < matrix.getColumnSize(); j++)
             {
                 Cell cell = matrix.getElement(i, j);
-                if(cell.getType().equals(CellType.EXPRESSION))
+                if(cell.getType().equals(Cell.CellType.EXPRESSION))
                 {
                     calculateCell(i, j, childDependencyValues);
                 }
@@ -213,4 +213,160 @@ public class Table
     }
 
 
+    public static class DynamicMatrix
+    {
+        final private List<List<Cell>> cells;
+        final private int rowSize;
+        final private int columnSize;
+
+        public DynamicMatrix(final int rowSize, final int columnSize)
+        {
+            this.rowSize = rowSize;
+            this.columnSize = columnSize;
+
+            cells = new ArrayList(rowSize);
+            for(int i = 0; i < rowSize; i++)
+            {
+                cells.add(new ArrayList<Cell>());
+                for(int j = 0; j < columnSize; j++)
+                {
+                    cells.get(i).add(new Cell(i, j));
+                }
+            }
+        }
+
+        public int getRowSize()
+        {
+            return rowSize;
+        }
+
+        public int getColumnSize()
+        {
+            return columnSize;
+        }
+
+        /**
+         * Get cell of the matrix.
+         *
+         * @param i row index.
+         * @param j column index.
+         * @return element of the matrix.
+         */
+        public Cell getElement(final int i, final int j)
+        {
+            return cells.get(i).get(j);
+        }
+
+        /**
+         * Get cell of the matrix.
+         *
+         * @param cellId cell id.
+         * @returnlement of the matrix.
+         */
+        public Cell getElement(final Cell.CellId cellId)
+        {
+            Pair<Integer, Integer> cellIdToIndex = Cell.CellId.cellIdToIndexes(cellId);
+            return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());
+        }
+
+        //TODO: delete
+        public String printTableIndex()
+        {
+            StringBuilder tableIndexBuilder = new StringBuilder("");
+            for(int i = 0; i < getRowSize(); i++)
+            {
+                for(int j = 0; j < getColumnSize(); j++)
+                {
+                    tableIndexBuilder.append(getElement(i, j).getCellId());
+                    if(j != getColumnSize() - 1)
+                    {
+                        tableIndexBuilder.append("\t");
+                    }
+                }
+                if(i != getRowSize() - 1)
+                {
+                    tableIndexBuilder.append("\n");
+                }
+            }
+            return tableIndexBuilder.toString();
+        }
+
+        public String printTable()
+        {
+            StringBuilder builder = new StringBuilder();
+            for (List<Cell> cellList : cells) {
+                for (Cell cell : cellList) {
+                    builder.append(cell.getResultValue());
+                    builder.append("\t");
+                }
+                builder.replace(builder.length() - 1, builder.length(),  "\n");
+            }
+            builder.delete(builder.length() - 1, builder.length());
+            return builder.toString();
+        }
+
+        // TODO: delete
+        public String printStringValueTable()
+        {
+            StringBuilder builder = new StringBuilder("");
+            for(int i = 0; i < getRowSize(); i++)
+            {
+                for(int j = 0; j < getColumnSize(); j++)
+                {
+                    builder.append(getElement(i, j).getOriginalValue());
+                    if(j != getColumnSize() - 1)
+                    {
+                        builder.append("\t");
+                    }
+                }
+                if(i != getRowSize() - 1)
+                {
+                    builder.append("\n");
+                }
+            }
+            return builder.toString();
+        }
+
+        // TODO: delete
+        public void printTableType()
+        {
+            StringBuilder builder = new StringBuilder("");
+            for(int i = 0; i < getRowSize(); i++)
+            {
+                for(int j = 0; j < getColumnSize(); j++)
+                {
+                    builder.append(getElement(i, j).getType());
+                    builder.append("\t");
+                }
+                builder.append("\n");
+            }
+            System.out.println(builder);
+        }
+
+        // TODO: delete
+        public void showChildrenCellDependancies()
+        {
+            System.out.println("Show children cell dependencies");
+            for(int i = 0; i < getRowSize(); i++)
+            {
+                for(int j = 0; j < getColumnSize(); j++)
+                {
+                    getElement(i, j).showChildrenDependencies();
+                }
+            }
+        }
+
+        // TODO: delete
+        public void showParentCellDependancies()
+        {
+            System.out.println("Show parent cell dependencies");
+            for(int i = 0; i < getRowSize(); i++)
+            {
+                for(int j = 0; j < getColumnSize(); j++)
+                {
+                    getElement(i, j).showParentDependencies();
+                }
+            }
+        }
+    }
 }

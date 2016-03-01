@@ -13,24 +13,30 @@ public class Cell
 {
     private static Logger log = LogManager.getLogger(Table.class);
 
-    private String stringValue = "";
-    private String value = "";
+    private String originalValue = "";
+    private String resultValue = "";
+
     private final CellId cellId;
-    private CellType type = CellType.NULL;
-    private ErrorMessage error = ErrorMessage.NO_ERROR;
+
+    private CellType type;
+
+    private ErrorMessage error;
     private Expression expression;
+
     final private Set<CellId> childrenCellDependencies = new TreeSet();
     final private Set<CellId> parentCellDependencies = new TreeSet();
 
     public Cell(final String cellId)
     {
         this.cellId = new CellId(cellId);
+        initNullTypeCell();
     }
 
     public Cell(final int row, final int col)
     {
         Pair<Character, Integer> cellIdLabel = CellId.indexToCellIdLabel(row, col);
         cellId = new CellId(cellIdLabel.getFirst() + cellIdLabel.getSecond().toString());
+        initNullTypeCell();
     }
 
     public ErrorMessage getError()
@@ -42,9 +48,9 @@ public class Cell
      * Get output cell value.
      * @return output cell value.
      */
-    public String getValue()
+    public String getResultValue()
     {
-        return value;
+        return resultValue;
     }
 
     public CellId getCellId()
@@ -56,18 +62,18 @@ public class Cell
      * Get input cell value.
      * @return input cell value.
      */
-    public String getStringValue()
+    public String getOriginalValue()
     {
-        return stringValue;
+        return originalValue;
     }
 
     /**
      * Set input string value.
-     * @param stringValue output string value.
+     * @param originalValue output string value.
      */
-    public void setStringValue(final String stringValue)
+    public void setOriginalValue(final String originalValue)
     {
-        this.stringValue = stringValue.trim();
+        this.originalValue = originalValue.trim();
     }
 
     public CellType getType()
@@ -100,16 +106,16 @@ public class Cell
         return parentCellDependencies;
     }
 
+
     /**
-     * Return the displayed value.
-     *
-     * @return the displayed value.
+     * Calculate cell value.
+     * @param expressionDependencyValues dependency expression data values.
      */
-    public void calculateValue(final Map<String, String> data)
+    public void calculateValue(final Map<String, String> expressionDependencyValues)
     {
         if(type.equals(CellType.NULL))
         {
-            value = "";
+            resultValue = "";
             return;
         }
         else if(type.equals(CellType.EXPRESSION))
@@ -118,11 +124,11 @@ public class Cell
             {
                 if (expression.getCalculated() == null)
                 {
-                    expression.calculate(data);
+                    expression.calculate(expressionDependencyValues);
                 }
 
                 Double resInt = Double.parseDouble(expression.getCalculated().getStringValue());
-                value = formatDouble(resInt);
+                resultValue = formatDouble(resInt);
                 return;
             }
             catch(Exception e)
@@ -134,12 +140,12 @@ public class Cell
         }
         else if(type.equals(CellType.POSITIVE_NUMBER))
         {
-            Double resInt = Double.parseDouble(stringValue);
+            Double resInt = Double.parseDouble(originalValue);
             if(resInt > 0)
             {
                 DecimalFormat format = new DecimalFormat();
                 format.setDecimalSeparatorAlwaysShown(false);
-                value = formatDouble(resInt);
+                resultValue = formatDouble(resInt);
             }
             else
             {
@@ -149,7 +155,7 @@ public class Cell
         }
         else if(type.equals(CellType.STRING))
         {
-            value = stringValue.substring(1).trim();
+            resultValue = originalValue.substring(1).trim();
             return;
         }
         else if(type.equals(CellType.ERROR))
@@ -169,14 +175,14 @@ public class Cell
      */
     public void initType()
     {
-        if(stringValue.trim().isEmpty())
+        if(originalValue.trim().isEmpty())
         {
             initNullTypeCell();
             return;
         }
         try
         {
-            switch(stringValue.charAt(0))
+            switch(originalValue.charAt(0))
             {
                 case '\'':
                 {
@@ -193,7 +199,7 @@ public class Cell
 
             try
             {
-                if(Integer.parseInt(stringValue) >= 0)
+                if(Integer.parseInt(originalValue) >= 0)
                 {
                     initPositiveNumberTypeCell();
                     return;
@@ -207,14 +213,14 @@ public class Cell
         }
         catch(FormatErrorException ex)
         {
-            log.info("Error parsing : " + stringValue);
+            log.info("Error parsing : " + originalValue);
             setErrorType(ErrorMessage.FORMAT_ERROR);
         }
     }
 
     private void initNullTypeCell()
     {
-        stringValue = "";
+        originalValue = "";
         expression = null;
         type = CellType.NULL;
         error = ErrorMessage.NO_ERROR;
@@ -225,12 +231,12 @@ public class Cell
         expression = null;
         error = ErrorMessage.NO_ERROR;
         type = CellType.STRING;
-        value = stringValue;
+        resultValue = originalValue;
     }
 
     private void initExpressionTypeCell()
     {
-        expression = new ExpressionImpl(stringValue);
+        expression = new ExpressionImpl(originalValue);
         initChildrenCellDependencies();
         error = ErrorMessage.NO_ERROR;
         type = CellType.EXPRESSION;
@@ -247,7 +253,7 @@ public class Cell
         expression = null;
         type = CellType.ERROR;
         this.error = error;
-        value = error.getError();
+        resultValue = error.getError();
     }
 
     public void initChildrenCellDependencies()
@@ -315,5 +321,163 @@ public class Cell
     public int hashCode()
     {
         return cellId.hashCode();
+    }
+
+    public static enum ErrorMessage
+    {
+        NEGATIVE_VALUE("#negative_number"),
+        CYCLE_DEPENDENCIES("#cycle_dependencies"),
+        FORMAT_ERROR("#format_error"),
+        NO_ERROR("");
+
+        private String error;
+
+        ErrorMessage(final String error)
+        {
+            this.error = error;
+        }
+
+        public String getError()
+        {
+            return error;
+        }
+    }
+
+    static enum CellType
+    {
+        NULL,
+        POSITIVE_NUMBER,
+        STRING,
+        EXPRESSION,
+        ERROR;
+    }
+
+    public static class CellId implements Comparable
+    {
+        private final char column;
+        private final int row;
+
+        public CellId(final String referenceString)
+        {
+            Pair<Character, Integer> cellId = CellId.parseReference(referenceString);
+            this.column = cellId.getFirst();
+            this.row = cellId.getSecond();
+        }
+
+        public CellId(final int row, final int column)
+        {
+            this.column = (char) (column + 65);
+            this.row = row + 1;
+        }
+
+        public char getColumn()
+        {
+            return column;
+        }
+
+        public int getRow()
+        {
+            return row;
+        }
+
+        public String toString()
+        {
+            return column + String.valueOf(row);
+        }
+
+        public static Pair<Character, Integer> parseReference(final String stringReference)
+        {
+            Character column;
+            int startRowIndex;
+            if(stringReference.charAt(0) == Operation.SUBSTRACTION.getOperation())
+            {
+                column = stringReference.charAt(1);
+                startRowIndex = 2;
+            }
+            else
+            {
+                column = stringReference.charAt(0);
+                startRowIndex = 1;
+            }
+            return new Pair<Character, Integer>(Character.toUpperCase(column), Integer.parseInt(stringReference.substring(startRowIndex)));
+        }
+
+        /**
+         * Convert the CellId values to the integer index values.
+         *
+         * @param cellId CellId value.
+         * @return integer index values.
+         */
+        public static Pair<Integer, Integer> cellIdToIndexes(final CellId cellId)
+        {
+            return new Pair<Integer, Integer>(cellId.getRow() - 1, (int) cellId.getColumn() - 65);
+        }
+
+        /**
+         * Convert row and column indexes to cellId object.
+         * @param row
+         * @param column
+         * @return
+         */
+        public static CellId indexesToCellId(final int row, final int column)
+        {
+            return new CellId(row, column);
+        }
+
+        /**
+         * Convert integer index values to the CellId value.
+         *
+         * @param row    row.
+         * @param column column.
+         * @return CellId value.
+         */
+        public static Pair<Character, Integer> indexToCellIdLabel(final int row, final int column)
+        {
+            return new Pair<Character, Integer>((char) (column + 65), row + 1);
+        }
+
+        public int compareTo(final Object o)
+        {
+            CellId entry = (CellId) o;
+            int rowResult = this.row - entry.getRow();
+            if(rowResult != 0)
+            {
+                return (int) rowResult / Math.abs(rowResult);
+            }
+            else
+            {
+                return new Character(this.column).compareTo(new Character(entry.getColumn()));
+            }
+        }
+
+        @Override
+        public boolean equals(final Object o)
+        {
+            if(this == o)
+            {
+                return true;
+            }
+            if(o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            CellId cellId = (CellId) o;
+
+            if(column != cellId.column)
+            {
+                return false;
+            }
+            return row == cellId.row;
+
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = (int) column;
+            result = 31 * result + row;
+            return result;
+        }
     }
 }

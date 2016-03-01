@@ -18,7 +18,7 @@ public class CellIdTest
         Pair<Character, Integer> cellIdLabel;
         Integer rowLabel;
         Character columnLabel;
-        CellId cellId;
+        Cell.CellId cellId;
         Integer rowIndex;
         Integer columnIndex;
 
@@ -31,14 +31,14 @@ public class CellIdTest
 //        assertEquals(F33, new CellId(rowLabel, columnLabel).toString());
 //        assertEquals(F33, new CellId(F33).toString());
 
-        cellId = new CellId(F33);
-        Pair<Integer, Integer> cellIndex = CellId.cellIdToIndexes(cellId);
+        cellId = new Cell.CellId(F33);
+        Pair<Integer, Integer> cellIndex = Cell.CellId.cellIdToIndexes(cellId);
         rowIndex = cellIndex.getFirst();
         columnIndex = cellIndex.getSecond();
         assertEquals(new Integer(rowStringIndex), rowIndex);
         assertEquals(new Integer(columnStringIndex), columnIndex);
 
-        cellIdLabel = CellId.parseReference(F33);
+        cellIdLabel = Cell.CellId.parseReference(F33);
         columnLabel = cellIdLabel.getFirst();
         rowLabel = cellIdLabel.getSecond();
         assertEquals((Integer) Integer.parseInt(F33.substring(1)), rowLabel);
