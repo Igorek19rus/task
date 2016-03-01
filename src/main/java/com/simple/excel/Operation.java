@@ -1,7 +1,6 @@
 package com.simple.excel;
 
-public enum Operation
-{
+public enum Operation {
     SUBSTRACTION('-'),
     ADDITION('+'),
     MULTIPLICATION('*'),
@@ -9,20 +8,16 @@ public enum Operation
 
     private char operation;
 
-    Operation(final char operation)
-    {
+    Operation(final char operation) {
         this.operation = operation;
     }
 
-    public char getOperation()
-    {
+    public char getOperation() {
         return operation;
     }
 
-    public static Operation parseOperation(final char op)
-    {
-        switch(op)
-        {
+    public static Operation parseOperation(final char op) {
+        switch (op) {
             case '+':
                 return ADDITION;
             case '-':
@@ -37,8 +32,7 @@ public enum Operation
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.valueOf(this.getOperation());
     }
 
@@ -48,13 +42,11 @@ public enum Operation
      * @param op char of operation.
      * @return byte operation priority.
      */
-    public static byte opPrior(final char op)
-    {
+    public static byte opPrior(final char op) {
         return 1;
     }
 
-    public static byte opPrior(final String op)
-    {
+    public static byte opPrior(final String op) {
         return 1;
     }
 }

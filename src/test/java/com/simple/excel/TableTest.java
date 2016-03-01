@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class TableTest
-{
+public class TableTest {
     public static String SIMPLE_TABLE = "3\t5\n"
             + "8\t=1-A1\t'rt\t=E1\t=-B2\n"
             + "5\t=A1+D2+E2\t=A3\t=A3+B3\t=B3\n"
@@ -38,24 +37,23 @@ public class TableTest
             + "=A1\t=A3\t7\t=8\t9\n"
             + "=A1\t=A3\t7\t=8\t9";
 
-    @Test (expected = FormatErrorException.class)
+    @Test(expected = FormatErrorException.class)
     public void parseTableLackColumn() {
         Table table = new Table(WRONG_TABLE);
     }
 
-    @Test (expected = FormatErrorException.class)
+    @Test(expected = FormatErrorException.class)
     public void parseTableExcessColumn() {
         Table table = new Table(WRONG_TABLE_2);
     }
 
-    @Test (expected = FormatErrorException.class)
+    @Test(expected = FormatErrorException.class)
     public void parseTableExcessRow() {
         Table table = new Table(WRONG_TABLE_3);
     }
 
     @Test
-    public void initTableTest()
-    {
+    public void initTableTest() {
         Table table;
         Table tableToCompare;
         String resultSimpleTable = "8\t-7\trt\t-26\t-26\n5\t26\t6\t12\t6\n6\t6\t8\t8\t#negative_number";
@@ -71,10 +69,8 @@ public class TableTest
         table.buildDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
-        for(int i = 0; i < table.getMatrix().getRowSize(); i++)
-        {
-            for(int j = 0; j < table.getMatrix().getColumnSize(); j++)
-            {
+        for (int i = 0; i < table.getMatrix().getRowSize(); i++) {
+            for (int j = 0; j < table.getMatrix().getColumnSize(); j++) {
                 assertEquals(table.getMatrix().getElement(i, j).getChildrenCellDependencies(), tableToCompare.getMatrix().getElement(i, j).getChildrenCellDependencies());
                 assertEquals(table.getMatrix().getElement(i, j).getType(), tableToCompare.getMatrix().getElement(i, j).getType());
             }
@@ -85,18 +81,14 @@ public class TableTest
         table = new Table(CYCLE_TABLE);
         tableToCompare = new Table(CYCLE_TABLE);
         constructCycleTableCellTypes(tableToCompare);
-        for(int i = 0; i < table.getMatrix().getRowSize(); i++)
-        {
-            for(int j = 0; j < table.getMatrix().getColumnSize(); j++)
-            {
+        for (int i = 0; i < table.getMatrix().getRowSize(); i++) {
+            for (int j = 0; j < table.getMatrix().getColumnSize(); j++) {
                 assertEquals(table.getMatrix().getElement(i, j).getType(), tableToCompare.getMatrix().getElement(i, j).getType());
             }
         }
         constructChildrenDependenciesOfCycleTable(tableToCompare);
-        for(int i = 0; i < table.getMatrix().getRowSize(); i++)
-        {
-            for(int j = 0; j < table.getMatrix().getColumnSize(); j++)
-            {
+        for (int i = 0; i < table.getMatrix().getRowSize(); i++) {
+            for (int j = 0; j < table.getMatrix().getColumnSize(); j++) {
                 assertEquals(table.getMatrix().getElement(i, j).getType(), tableToCompare.getMatrix().getElement(i, j).getType());
                 assertEquals(table.getMatrix().getElement(i, j).getChildrenCellDependencies(), tableToCompare.getMatrix().getElement(i, j).getChildrenCellDependencies());
             }
@@ -107,8 +99,7 @@ public class TableTest
         assertEquals(resultCycleTable, table.getMatrix().printTable());
     }
 
-    private void constructSimpleTableCellTypes(final Table table)
-    {
+    private void constructSimpleTableCellTypes(final Table table) {
         Cell curCell;
         curCell = table.getMatrix().getElement(0, 0);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
@@ -142,8 +133,7 @@ public class TableTest
         curCell.setType(Cell.CellType.ERROR);
     }
 
-    private void constructCycleTableCellTypes(final Table table)
-    {
+    private void constructCycleTableCellTypes(final Table table) {
         Cell curCell;
         curCell = table.getMatrix().getElement(0, 0);
         curCell.setType(Cell.CellType.EXPRESSION);
@@ -177,8 +167,7 @@ public class TableTest
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
     }
 
-    private void constructChildrenDependenciesOfSimpleTable(final Table table)
-    {
+    private void constructChildrenDependenciesOfSimpleTable(final Table table) {
         Cell curCell;
 
         curCell = table.getMatrix().getElement(new Cell.CellId("B1"));
@@ -215,8 +204,7 @@ public class TableTest
         curCell.getChildrenCellDependencies().add(new Cell.CellId("C3"));
     }
 
-    private void constructChildrenDependenciesOfCycleTable(final Table table)
-    {
+    private void constructChildrenDependenciesOfCycleTable(final Table table) {
         Cell curCell;
 
         curCell = table.getMatrix().getElement(new Cell.CellId("A1"));

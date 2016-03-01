@@ -3,8 +3,7 @@ package com.simple.excel;
 import java.util.Map;
 import java.util.Set;
 
-public interface Expression
-{
+public interface Expression {
     String getExpression();
 
     DataWrapper getCalculated();

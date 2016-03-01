@@ -5,16 +5,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class CellIdTest
-{
+public class CellIdTest {
 
     final private String F33 = "F33";
     final int rowStringIndex = 32;
     final int columnStringIndex = 5;
 
     @Test
-    public void parseCellId()
-    {
+    public void parseCellId() {
         Pair<Character, Integer> cellIdLabel;
         Integer rowLabel;
         Character columnLabel;

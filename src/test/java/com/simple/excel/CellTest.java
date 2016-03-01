@@ -10,8 +10,7 @@ import java.util.TreeSet;
 import static org.junit.Assert.*;
 
 
-public class CellTest
-{
+public class CellTest {
 
     final String INTEGER_STRING = "3";
     final String INTEGER_STRING_2 = "32";
@@ -35,8 +34,7 @@ public class CellTest
 
     private final static Map<String, String> data = new HashMap();
 
-    static
-    {
+    static {
         Cell cell1 = new Cell("A1");
         Cell cell2 = new Cell("B11");
         Cell cell3 = new Cell("B1");
@@ -52,8 +50,7 @@ public class CellTest
     }
 
     @Test
-    public void initTypeTest()
-    {
+    public void initTypeTest() {
         Cell cell;
         Set<Cell.CellId> childrenCellDependancies;
 

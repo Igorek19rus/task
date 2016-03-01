@@ -8,8 +8,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class ExpressionImplTest
-{
+public class ExpressionImplTest {
     private static Logger log = LogManager.getLogger(Table.class);
 
     final String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
@@ -42,8 +41,7 @@ public class ExpressionImplTest
 
     private final static Map<String, String> data = new HashMap();
 
-    static
-    {
+    static {
         Cell cell1 = new Cell("A1");
         Cell cell2 = new Cell("B11");
         Cell cell3 = new Cell("B1");
@@ -59,8 +57,7 @@ public class ExpressionImplTest
     }
 
     @Test
-    public void parseTypeTest() throws Exception
-    {
+    public void parseTypeTest() throws Exception {
         assertEquals(Double.class, ExpressionImpl.Parser.parseType(INTEGER_STRING));
         assertEquals(Double.class, ExpressionImpl.Parser.parseType(INTEGER_STRING_2));
         assertEquals(Double.class, ExpressionImpl.Parser.parseType(NEG_INTEGER_STRING));
@@ -71,44 +68,37 @@ public class ExpressionImplTest
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongStringTypeTest()
-    {
+    public void parseWrongStringTypeTest() {
         ExpressionImpl.Parser.parseType(WRONG_STRING);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongStringNullTypeTest()
-    {
+    public void parseWrongStringNullTypeTest() {
         ExpressionImpl.Parser.parseType(STRIN_NULL);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongIntegerTypeTest()
-    {
+    public void parseWrongIntegerTypeTest() {
         ExpressionImpl.Parser.parseType(WRONG_INTEGER);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongReferenceTypeTest()
-    {
+    public void parseWrongReferenceTypeTest() {
         ExpressionImpl.Parser.parseType(WRONG_REFERENCE);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongExpressionTest()
-    {
+    public void parseWrongExpressionTest() {
         ExpressionImpl.Parser.parseType(WRONG_EXPRESSION);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void parseWrongExpressionTest2()
-    {
+    public void parseWrongExpressionTest2() {
         ExpressionImpl.Parser.parseType(WRONG_EXPRESSION_2);
     }
 
     @Test
-    public void findPatternTest()
-    {
+    public void findPatternTest() {
         assertTrue(ExpressionImpl.Parser.findPattern(STRING_PATTERN, STRING));
         assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, STRIN_NULL));
         assertFalse(ExpressionImpl.Parser.findPattern(STRING_PATTERN, NEG_REFERENCE_2));
@@ -144,10 +134,8 @@ public class ExpressionImplTest
     }
 
     @Test
-    public void parseObjectFromStringTest()
-    {
-        try
-        {
+    public void parseObjectFromStringTest() {
+        try {
             assertEquals(STRING, ExpressionImpl.parseObjectFromString(new DataWrapper(String.class, STRING)));
             assertEquals(String.class, ExpressionImpl.parseObjectFromString(new DataWrapper(String.class, STRING)).getClass());
             assertEquals(Integer.parseInt(INTEGER_STRING), ExpressionImpl.parseObjectFromString(new DataWrapper(Integer.class, INTEGER_STRING)));
@@ -166,17 +154,14 @@ public class ExpressionImplTest
             assertEquals(ReferenceCell.class, ExpressionImpl.parseObjectFromString(new DataWrapper(ReferenceCell.class, NEG_REFERENCE)).getClass());
             assertEquals(new ReferenceCell(NEG_REFERENCE_2), ExpressionImpl.parseObjectFromString(new DataWrapper(ReferenceCell.class, NEG_REFERENCE_2)));
             assertEquals(ReferenceCell.class, ExpressionImpl.parseObjectFromString(new DataWrapper(ReferenceCell.class, NEG_REFERENCE_2)).getClass());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.info("Error create object by parseObjectFromString");
             e.printStackTrace();
         }
     }
 
     @Test
-    public void parseExpressionTest()
-    {
+    public void parseExpressionTest() {
 //        =5+3-4
         List<DataWrapper> result = new ArrayList();
         result.add(new DataWrapper(Double.class, "5"));
@@ -186,8 +171,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(Double.class, "4"));
         List<DataWrapper> resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_1);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < resultOfParsing.size(); i++)
-        {
+        for (int i = 0; i < resultOfParsing.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
 
@@ -206,8 +190,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(ReferenceCell.class, "B1"));
         resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_2);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < result.size(); i++)
-        {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
 
@@ -216,8 +199,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(Double.class, "3"));
         resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_6);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < result.size(); i++)
-        {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
 
@@ -226,8 +208,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(Double.class, "-3"));
         resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_3);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < result.size(); i++)
-        {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
 
@@ -236,8 +217,7 @@ public class ExpressionImplTest
         result.add(new DataWrapper(ReferenceCell.class, "A1"));
         resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_5);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < result.size(); i++)
-        {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
 
@@ -246,15 +226,13 @@ public class ExpressionImplTest
         result.add(new DataWrapper(ReferenceCell.class, "-A1"));
         resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_4);
         assertEquals(result.size(), resultOfParsing.size());
-        for(int i = 0; i < result.size(); i++)
-        {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i), resultOfParsing.get(i));
         }
     }
 
     @Test
-    public void calculateExpressionTest()
-    {
+    public void calculateExpressionTest() {
         ExpressionImpl expression;
 
 //            =5+3-4
@@ -289,29 +267,25 @@ public class ExpressionImplTest
     }
 
     @Test(expected = FormatErrorException.class)
-    public void calculateExpressionErrorTermTest()
-    {
+    public void calculateExpressionErrorTermTest() {
         ExpressionImpl expression = new ExpressionImpl(WRONG_EXPRESSION);
         expression.calculate(data);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void calculateExpressionErrorOperatorInTheEndTest()
-    {
+    public void calculateExpressionErrorOperatorInTheEndTest() {
         ExpressionImpl expression = new ExpressionImpl(WRONG_EXPRESSION_2);
         expression.calculate(data);
     }
 
     @Test(expected = FormatErrorException.class)
-    public void calculateExpressionErrorDivisionByZeroTest()
-    {
+    public void calculateExpressionErrorDivisionByZeroTest() {
         ExpressionImpl expression = new ExpressionImpl(WRONG_EXPRESSION_3);
         expression.calculate(data);
     }
 
     @Test
-    public void parseDependenciesTest()
-    {
+    public void parseDependenciesTest() {
         Set<Cell.CellId> dependencies;
         ExpressionImpl expression;
 
