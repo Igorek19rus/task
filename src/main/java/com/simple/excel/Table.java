@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Table {
+
     private static Logger log = LogManager.getLogger(Table.class);
 
     final private DynamicMatrix matrix;
@@ -76,9 +77,9 @@ public class Table {
         visited[i][j] = deep;
         Cell cellIJ = matrix.getElement(i, j);
         if (cellIJ.getType().equals(Cell.CellType.EXPRESSION)) {
-            for (Cell.CellId cellId : cellIJ.getChildrenCellDependencies()) {
+            for (CellId cellId : cellIJ.getChildrenCellDependencies()) {
 
-                Pair<Integer, Integer> cellIndexes = Cell.CellId.cellIdToIndexes(cellId);
+                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cellId);
                 Cell cell = matrix.getElement(cellId);
                 cell.getParentCellDependencies().add(cellIJ.getCellId());
                 cell.getParentCellDependencies().addAll(cellIJ.getParentCellDependencies());
@@ -128,7 +129,7 @@ public class Table {
         for (int i = 0; i < matrix.getRowSize(); i++) {
             for (int j = 0; j < matrix.getColumnSize(); j++) {
                 if (isCycleDependencies(i, j)) {
-                    for (Cell.CellId cellId : matrix.getElement(i, j).getParentCellDependencies()) {
+                    for (CellId cellId : matrix.getElement(i, j).getParentCellDependencies()) {
                         matrix.getElement(cellId).setErrorType(Cell.ErrorMessage.CYCLE_DEPENDENCIES);
                     }
                 }
@@ -151,8 +152,8 @@ public class Table {
         Cell currentCell = matrix.getElement(i, j);
         if (currentCell.getType().equals(Cell.CellType.EXPRESSION)) {
 
-            for (Cell.CellId childrenCellId : currentCell.getChildrenCellDependencies()) {
-                final Pair<Integer, Integer> childrenCellIndex = Cell.CellId.cellIdToIndexes(childrenCellId);
+            for (CellId childrenCellId : currentCell.getChildrenCellDependencies()) {
+                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndexes(childrenCellId);
                 if (childDependencyValues.get(childrenCellId.toString()) == null) {
                     childDependencyValues.put(childrenCellId.toString(), calculateCell(childrenCellIndex.getFirst(), childrenCellIndex.getSecond(), childDependencyValues));
                 }
@@ -224,8 +225,8 @@ public class Table {
          * @param cellId cell id.
          * @returnlement of the matrix.
          */
-        public Cell getElement(final Cell.CellId cellId) {
-            Pair<Integer, Integer> cellIdToIndex = Cell.CellId.cellIdToIndexes(cellId);
+        public Cell getElement(final CellId cellId) {
+            Pair<Integer, Integer> cellIdToIndex = CellId.cellIdToIndexes(cellId);
             return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());
         }
 

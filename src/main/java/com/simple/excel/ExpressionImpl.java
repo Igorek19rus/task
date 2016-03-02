@@ -1,23 +1,21 @@
 package com.simple.excel;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.simple.excel.Operation.opPrior;
 import static com.simple.excel.Operation.parseOperation;
 
 public class ExpressionImpl implements Expression {
-    final static String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
-    final static String INTEGER_PATTERN = "^-?[0-9]+$";
-    final static String STRING_PATTERN = "^'\\w+$";
 
     final private String expression;
 
     private DataWrapper calculated = null;
 
-    public ExpressionImpl(final String expression) {
+    final private Parser parser;
+
+    public ExpressionImpl(final String expression, final Parser parser) {
         this.expression = expression;
+        this.parser = parser;
     }
 
     public DataWrapper getCalculated() {
@@ -75,7 +73,7 @@ public class ExpressionImpl implements Expression {
      * @throws Exception error by calculation.
      */
     public void calculate(final Map<String, String> data) {
-        List<DataWrapper> rightSideInSplit = getRPN(Parser.parseExpression(expression));
+        List<DataWrapper> rightSideInSplit = getRPN(parser.parseExpression(expression));
         DataWrapper dAWrapper = null, dBWrapper = null;
         DataWrapper sTmp;
         Deque<DataWrapper> stack = new ArrayDeque();
@@ -137,98 +135,21 @@ public class ExpressionImpl implements Expression {
         calculated = stack.pop();
     }
 
-    public Set<Cell.CellId> parseDependencies() {
-        Set<Cell.CellId> directDependencies = new TreeSet();
+    public Set<CellId> parseDependencies() {
+        Set<CellId> directDependencies = new HashSet();
         if (expression.isEmpty()) {
             return directDependencies;
         }
-        List<DataWrapper> terms = Parser.parseExpression(expression);
+        List<DataWrapper> terms = parser.parseExpression(expression);
         for (DataWrapper term : terms) {
             if (term.getClazz().equals(ReferenceCell.class)) {
-                directDependencies.add(new Cell.CellId(term.getStringValue()));
+                directDependencies.add(new CellId(term.getStringValue()));
             }
         }
         return directDependencies;
     }
 
-    public static <T> T parseObjectFromString(final DataWrapper<T> parseInfo) throws Exception {
+    private <T> T parseObjectFromString(final DataWrapper<T> parseInfo) throws Exception {
         return (T) parseInfo.getClazz().getConstructor(new Class[]{String.class}).newInstance(parseInfo.getStringValue());
-    }
-
-
-    public static class Parser {
-        private Parser() {
-        };
-
-        public static List<DataWrapper> parseExpression(final String expression) {
-            if (expression.charAt(0) != '=') {
-                throw new FormatErrorException("Format error expression");
-            }
-            String expr = expression.substring(1);
-            // "[-|+|*|/]";
-            StringBuilder operationPattern = new StringBuilder();
-            operationPattern.append('[');
-            for (Operation op : Operation.class.getEnumConstants()) {
-                operationPattern.append(op.getOperation());
-                operationPattern.append('|');
-            }
-            operationPattern.replace(operationPattern.length() - 1, operationPattern.length(), "]");
-            Pattern p = Pattern.compile(operationPattern.toString());
-            Matcher m = p.matcher(expr);
-            List list = new ArrayList();
-            int start = 0;
-            while (m.find()) {
-                if (m.start() == 0 && expr.charAt(0) == '-') {
-                    if (!m.find()) {
-                        String term = expr.substring(start);
-                        Class clazz = parseType(term);
-                        list.add(new DataWrapper(clazz, term));
-                        return list;
-                    }
-                    String term = expr.substring(start, m.start());
-                    Class clazz = parseType(term);
-                    if (clazz == ReferenceCell.class || clazz.asSubclass(Number.class).equals(clazz)) {
-                        list.add(new DataWrapper(clazz, term));
-                        String op = expr.substring(m.start(), m.end());
-                        list.add(new DataWrapper(Operation.class, op));
-                        start = m.end();
-                    }
-                } else {
-                    String term = expr.substring(start, m.start());
-                    Class clazz = parseType(term);
-                    list.add(new DataWrapper(clazz, term));
-                    start = m.end();
-                    String op = expr.substring(m.start(), m.end());
-                    list.add(new DataWrapper(Operation.class, op));
-                }
-            }
-            String lastTerm = expr.substring(start);
-            Class clazz = parseType(lastTerm);
-            list.add(new DataWrapper(clazz, lastTerm));
-            return list;
-        }
-
-        public static Class parseType(final String sIn) {
-            String sInTrim = sIn.trim();
-            if (findPattern(STRING_PATTERN, sInTrim)) {
-                return String.class;
-            } else if (findPattern(INTEGER_PATTERN, sInTrim)) {
-                return Double.class;
-            } else if (findPattern(REFERENCE_PATTERN, sInTrim)) {
-                return ReferenceCell.class;
-            }
-
-            throw new FormatErrorException("Unrecognized type.");
-        }
-
-        public static boolean findPattern(final String pattern, final String sIn) {
-            if (pattern == null || pattern.isEmpty() || sIn == null || sIn.isEmpty()) {
-                return false;
-            }
-            Pattern p = Pattern.compile(pattern);
-            Matcher m = p.matcher(sIn);
-
-            return m.find();
-        }
     }
 }

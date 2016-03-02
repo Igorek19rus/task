@@ -10,5 +10,5 @@ public interface Expression {
 
     void calculate(final Map<String, String> data);
 
-    Set<Cell.CellId> parseDependencies();
+    Set<CellId> parseDependencies();
 }

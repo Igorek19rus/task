@@ -16,18 +16,18 @@ public class CellIdTest {
         Pair<Character, Integer> cellIdLabel;
         Integer rowLabel;
         Character columnLabel;
-        Cell.CellId cellId;
+        CellId cellId;
         Integer rowIndex;
         Integer columnIndex;
 
-        cellId = new Cell.CellId(F33);
-        Pair<Integer, Integer> cellIndex = Cell.CellId.cellIdToIndexes(cellId);
+        cellId = new CellId(F33);
+        Pair<Integer, Integer> cellIndex = CellId.cellIdToIndexes(cellId);
         rowIndex = cellIndex.getFirst();
         columnIndex = cellIndex.getSecond();
         assertEquals(new Integer(rowStringIndex), rowIndex);
         assertEquals(new Integer(columnStringIndex), columnIndex);
 
-        cellIdLabel = Cell.CellId.parseReference(F33);
+        cellIdLabel = CellId.parseReference(F33);
         columnLabel = cellIdLabel.getFirst();
         rowLabel = cellIdLabel.getSecond();
         assertEquals((Integer) Integer.parseInt(F33.substring(1)), rowLabel);

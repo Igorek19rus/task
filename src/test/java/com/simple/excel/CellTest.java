@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -52,10 +52,10 @@ public class CellTest {
     @Test
     public void initTypeTest() {
         Cell cell;
-        Set<Cell.CellId> childrenCellDependancies;
+        Set<CellId> childrenCellDependancies;
 
         cell = new Cell(0, 0);
-        childrenCellDependancies = new TreeSet();
+        childrenCellDependancies = new HashSet();
         cell.setOriginalValue(INTEGER_STRING);
         cell.initType();
         cell.initChildrenCellDependencies();
@@ -233,8 +233,8 @@ public class CellTest {
         assertEquals(childrenCellDependancies, cell.getChildrenCellDependencies());
 
         cell = new Cell(0, 0);
-        childrenCellDependancies = new TreeSet();
-        childrenCellDependancies.add(new Cell.CellId("A1"));
+        childrenCellDependancies = new HashSet();
+        childrenCellDependancies.add(new CellId("A1"));
         cell.setOriginalValue(REFERENCE_NEGATIVE_EXPRESSION);
         cell.initType();
         cell.initChildrenCellDependencies();
@@ -247,8 +247,8 @@ public class CellTest {
         assertEquals(childrenCellDependancies, cell.getChildrenCellDependencies());
 
         cell = new Cell(0, 0);
-        childrenCellDependancies = new TreeSet();
-        childrenCellDependancies.add(new Cell.CellId("A1"));
+        childrenCellDependancies = new HashSet();
+        childrenCellDependancies.add(new CellId("A1"));
         cell.setOriginalValue(REFERENCE_EXPRESSION);
         cell.initType();
         cell.initChildrenCellDependencies();
@@ -261,11 +261,11 @@ public class CellTest {
         assertEquals(childrenCellDependancies, cell.getChildrenCellDependencies());
 
         cell = new Cell(0, 0);
-        childrenCellDependancies = new TreeSet();
-        childrenCellDependancies.add(new Cell.CellId("A1"));
-        childrenCellDependancies.add(new Cell.CellId("B11"));
-        childrenCellDependancies.add(new Cell.CellId("B1"));
-        childrenCellDependancies.add(new Cell.CellId("D2"));
+        childrenCellDependancies = new HashSet();
+        childrenCellDependancies.add(new CellId("A1"));
+        childrenCellDependancies.add(new CellId("B11"));
+        childrenCellDependancies.add(new CellId("B1"));
+        childrenCellDependancies.add(new CellId("D2"));
         cell.setOriginalValue(CHILDREN_DEPENDENCIES_EXPRESSION);
         cell.initType();
         cell.initChildrenCellDependencies();
@@ -277,6 +277,4 @@ public class CellTest {
         assertEquals("-2", cell.getResultValue());
         assertEquals(childrenCellDependancies, cell.getChildrenCellDependencies());
     }
-
-
 }

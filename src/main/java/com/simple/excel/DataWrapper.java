@@ -38,7 +38,6 @@ public class DataWrapper<T> {
             return false;
         }
         return !(stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null);
-
     }
 
     @Override
