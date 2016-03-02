@@ -157,6 +157,9 @@ public class ExpressionImpl implements Expression {
 
 
     public static class Parser {
+        private Parser() {
+        };
+
         public static List<DataWrapper> parseExpression(final String expression) {
             if (expression.charAt(0) != '=') {
                 throw new FormatErrorException("Format error expression");

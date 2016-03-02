@@ -147,6 +147,7 @@ public class Cell {
     /**
      * Set cell type by parsing string value.
      */
+    @SuppressWarnings("PMD")
     public void initType() {
         if (originalValue.trim().isEmpty()) {
             initNullTypeCell();

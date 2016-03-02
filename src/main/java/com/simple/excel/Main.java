@@ -1,6 +1,10 @@
 package com.simple.excel;
 
-public class Main {
+public final class Main {
+
+    private Main () {
+    };
+
     final public static String TABLE_DATA1 = "3\t5\n"
             + "=1+2\t=D1/2\t2\t3\t4\n"
             + "5\t=C2+D2+E2\t=A3\t=A3+B3\t=B3\n"
