@@ -1,7 +1,7 @@
 package com.simple.excel;
 
 public enum Operation {
-    SUBSTRACTION('-'),
+    SUBTRACTION('-'),
     ADDITION('+'),
     MULTIPLICATION('*'),
     DIVISION('/');
@@ -21,7 +21,7 @@ public enum Operation {
             case '+':
                 return ADDITION;
             case '-':
-                return SUBSTRACTION;
+                return SUBTRACTION;
             case '/':
                 return DIVISION;
             case '*':

@@ -32,59 +32,11 @@ public class Main {
             + " \t \t \t ";
 
     public static void main(final String[] args) {
-        String tableString = TABLE_DATA1;
-        System.out.println(tableString);
-        System.out.println("=====");
-        Table table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA2;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA3;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA4;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
-
-        tableString = TABLE_DATA5;
-        System.out.println(tableString);
-        System.out.println("=====");
-        table = new Table(tableString);
-        table.buildDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
-        System.out.println();
+        String tableString;
+        Table table;
 
         tableString = TABLE_DATA6;
-        System.out.println(tableString);
-        System.out.println("=====");
+
         table = new Table(tableString);
         table.buildDependencyTrees();
         table.resolveCycleDependencies();

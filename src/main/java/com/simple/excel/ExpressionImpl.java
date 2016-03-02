@@ -105,7 +105,7 @@ public class ExpressionImpl implements Expression {
                     case ADDITION:
                         dA = dA + dB;
                         break;
-                    case SUBSTRACTION:
+                    case SUBTRACTION:
                         dA = dA - dB;
                         break;
                     case DIVISION:
@@ -124,7 +124,7 @@ public class ExpressionImpl implements Expression {
             } else {
                 Double dAInteger;
                 if (sTmp.getClazz().equals(ReferenceCell.class)) {
-                    dAInteger = sTmp.getStringValue().charAt(0) == Operation.SUBSTRACTION.getOperation() ?
+                    dAInteger = sTmp.getStringValue().charAt(0) == Operation.SUBTRACTION.getOperation() ?
                             -1 * Double.parseDouble(data.get(sTmp.getStringValue().substring(1))) : Double.parseDouble(data.get(sTmp.getStringValue()));
                 } else {
                     dAInteger = Double.parseDouble(sTmp.getStringValue());
@@ -162,7 +162,7 @@ public class ExpressionImpl implements Expression {
                 throw new FormatErrorException("Format error expression");
             }
             String expr = expression.substring(1);
-            //        String operationPattern = "[-|+|*|/]";
+            // "[-|+|*|/]";
             StringBuilder operationPattern = new StringBuilder();
             operationPattern.append('[');
             for (Operation op : Operation.class.getEnumConstants()) {

@@ -167,7 +167,7 @@ public class ExpressionImplTest {
         result.add(new DataWrapper(Double.class, "5"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
         result.add(new DataWrapper(Double.class, "3"));
-        result.add(new DataWrapper(Operation.class, Operation.SUBSTRACTION.toString()));
+        result.add(new DataWrapper(Operation.class, Operation.SUBTRACTION.toString()));
         result.add(new DataWrapper(Double.class, "4"));
         List<DataWrapper> resultOfParsing = ExpressionImpl.Parser.parseExpression(EXPRESSION_1);
         assertEquals(result.size(), resultOfParsing.size());
@@ -180,7 +180,7 @@ public class ExpressionImplTest {
         result.add(new DataWrapper(ReferenceCell.class, "-A1"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
         result.add(new DataWrapper(Double.class, "3"));
-        result.add(new DataWrapper(Operation.class, Operation.SUBSTRACTION.toString()));
+        result.add(new DataWrapper(Operation.class, Operation.SUBTRACTION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "A1"));
         result.add(new DataWrapper(Operation.class, Operation.ADDITION.toString()));
         result.add(new DataWrapper(ReferenceCell.class, "B11"));

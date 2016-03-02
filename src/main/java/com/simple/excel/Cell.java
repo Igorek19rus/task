@@ -140,9 +140,8 @@ public class Cell {
     }
 
     public static String formatDouble(final Double dbl) {
-        DecimalFormat format = new DecimalFormat();
-        format.setDecimalSeparatorAlwaysShown(false);
-        return format.format(dbl);
+        Integer result = dbl.intValue();
+        return result.toString();
     }
 
     /**
@@ -252,7 +251,7 @@ public class Cell {
         return cellId.hashCode();
     }
 
-    public static enum ErrorMessage {
+    public enum ErrorMessage {
         NEGATIVE_VALUE("#negative_number"),
         CYCLE_DEPENDENCIES("#cycle_dependencies"),
         FORMAT_ERROR("#format_error"),
@@ -269,7 +268,7 @@ public class Cell {
         }
     }
 
-    static enum CellType {
+    enum CellType {
         NULL,
         POSITIVE_NUMBER,
         STRING,
@@ -307,7 +306,7 @@ public class Cell {
         public static Pair<Character, Integer> parseReference(final String stringReference) {
             Character column;
             int startRowIndex;
-            if (stringReference.charAt(0) == Operation.SUBSTRACTION.getOperation()) {
+            if (stringReference.charAt(0) == Operation.SUBTRACTION.getOperation()) {
                 column = stringReference.charAt(1);
                 startRowIndex = 2;
             } else {
