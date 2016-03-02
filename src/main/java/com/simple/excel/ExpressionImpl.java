@@ -65,13 +65,6 @@ public class ExpressionImpl implements Expression {
         return rpnListInSplit;
     }
 
-    /**
-     * Calculate expression.
-     *
-     * @param data map of CellId-value dependencies.
-     * @return expression's result.
-     * @throws Exception error by calculation.
-     */
     public void calculate(final Map<String, String> data) {
         List<DataWrapper> rightSideInSplit = getRPN(parser.parseExpression(expression));
         DataWrapper dAWrapper = null, dBWrapper = null;
