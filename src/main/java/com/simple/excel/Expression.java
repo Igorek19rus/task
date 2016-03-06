@@ -11,6 +11,7 @@ public interface Expression {
 
     /**
      * Get calculated value.
+     *
      * @return calculated value.
      */
     DataWrapper getCalculated();
@@ -26,6 +27,7 @@ public interface Expression {
 
     /**
      * Parse children dependencies.
+     *
      * @return set of depended cell id
      */
     Set<CellId> parseDependencies();

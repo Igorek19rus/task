@@ -1,9 +1,7 @@
 package com.simple.excel;
 
+@SuppressWarnings("PMD.UseUtilityClass")
 public final class Main {
-
-    private Main () {
-    };
 
     final public static String TABLE_DATA1 = "3\t5\n"
             + "=1+2\t=D1/2\t2\t3\t4\n"
@@ -35,6 +33,7 @@ public final class Main {
             + " \t \t \t \t \n"
             + " \t \t \t ";
 
+    @SuppressWarnings("PMD")
     public static void main(final String[] args) {
         String tableString;
         Table table;

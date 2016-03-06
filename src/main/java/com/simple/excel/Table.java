@@ -150,8 +150,8 @@ public class Table {
     /**
      * Return calculated output cell value.
      *
-     * @param i                     row cell.
-     * @param j                     column cell.
+     * @param i row cell.
+     * @param j column cell.
      * @param childDependencyCalculated map of the children (string cell id - calculated string value) information.
      * @return string value.
      */

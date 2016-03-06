@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ParserImpl implements Parser
-{
+public class ParserImpl implements Parser {
     final static String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
     final static String INTEGER_PATTERN = "^-?[0-9]+$";
     final static String STRING_PATTERN = "^'\\w+$";
@@ -81,4 +80,4 @@ public class ParserImpl implements Parser
 
         return m.find();
     }
-    }
+}

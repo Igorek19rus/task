@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * Parser of the expression.
  */
-public interface Parser
-{
+public interface Parser {
     /**
      * Parse type of the term or operation.
+     *
      * @param sIn
      * @return
      */
@@ -16,6 +16,7 @@ public interface Parser
 
     /**
      * Parse expression.
+     *
      * @param expression expression.
      * @return list of wrapper data.
      */
@@ -23,8 +24,9 @@ public interface Parser
 
     /**
      * Test whether pattern expression was found in the string.
+     *
      * @param pattern regex expression.
-     * @param sIn input string.
+     * @param sIn     input string.
      * @return true if it has been finded, false otherwise.
      */
     boolean findPattern(final String pattern, final String sIn);

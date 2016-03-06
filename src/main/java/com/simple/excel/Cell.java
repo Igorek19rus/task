@@ -211,11 +211,11 @@ public class Cell {
         }
         Set<CellId> result;
         try {
-             result = expression.parseDependencies();
+            result = expression.parseDependencies();
         } catch (FormatErrorException ex) {
             log.info(ex);
             setErrorType(ErrorMessage.FORMAT_ERROR);
-            return  new HashSet();
+            return new HashSet();
         }
         return result;
     }

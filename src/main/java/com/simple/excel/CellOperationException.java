@@ -16,5 +16,4 @@ public class CellOperationException extends RuntimeException {
     public CellOperationException(final Throwable throwable) {
         super(throwable);
     }
-
 }

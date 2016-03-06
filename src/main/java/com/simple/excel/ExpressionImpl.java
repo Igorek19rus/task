@@ -65,6 +65,7 @@ public class ExpressionImpl implements Expression {
         return rpnListInSplit;
     }
 
+    @SuppressWarnings("PMD.MissingBreakInSwitch")
     public void calculate(final Map<CellId, Cell> data) {
         List<DataWrapper> rightSideInSplit = getRPN(parser.parseExpression(expression));
         DataWrapper dAWrapper = null, dBWrapper = null;
@@ -112,11 +113,15 @@ public class ExpressionImpl implements Expression {
                     Cell cell = unarySubtraction ? data.get(new CellId(sTmp.getStringValue().substring(1))) :
                             data.get(new CellId(sTmp.getStringValue()));
                     switch (cell.getType()) {
-                        case NULL:  dAInteger = 0;
-                                    break;
-                        case ERROR: throw new FormatErrorException("Cell children dependency has error type.");
-                        case STRING: throw new CellOperationException("Unsupported expression with string type value.");
-                            default: dAInteger = unarySubtraction ? -1 * Integer.parseInt(cell.getResultValue()) :
+                        case NULL:
+                            dAInteger = 0;
+                            break;
+                        case ERROR:
+                            throw new FormatErrorException("Cell children dependency has error type.");
+                        case STRING:
+                            throw new CellOperationException("Unsupported expression with string type value.");
+                        default:
+                            dAInteger = unarySubtraction ? -1 * Integer.parseInt(cell.getResultValue()) :
                                     Integer.parseInt(cell.getResultValue());
                     }
                 } else {
