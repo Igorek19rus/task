@@ -189,7 +189,6 @@ public class Table {
         }
     }
 
-
     public static class DynamicMatrix {
         final private List<List<Cell>> cells;
         final private int rowSize;

@@ -1,5 +1,8 @@
 package com.simple.excel;
 
+/**
+ * Handle cell operation.
+ */
 public class CellOperationException extends RuntimeException {
     public CellOperationException() {
         super();

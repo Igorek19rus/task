@@ -1,5 +1,8 @@
 package com.simple.excel;
 
+/**
+ * Handle format error expression.
+ */
 public class FormatErrorException extends RuntimeException {
     public FormatErrorException() {
         super();

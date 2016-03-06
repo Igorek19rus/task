@@ -1,5 +1,8 @@
 package com.simple.excel;
 
+/**
+ * Cell identification.
+ */
 public class CellId implements Comparable {
 
     private final char column;

@@ -1,5 +1,8 @@
 package com.simple.excel;
 
+/**
+ * Possible operation between cells and numbers.
+ */
 public enum Operation {
     SUBTRACTION('-'),
     ADDITION('+'),

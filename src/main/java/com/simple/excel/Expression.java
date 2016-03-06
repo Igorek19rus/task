@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * Expression which can parse dependency and calculate the expression value.
  */
 public interface Expression {
     String getExpression();
