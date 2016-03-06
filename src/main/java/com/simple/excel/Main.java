@@ -23,8 +23,8 @@ public final class Main {
             + "5\t6\t7\t\n"
             + "=2*A1-3\t7\t6\n";
 
-    final public static String TABLE_DATA5 = "1\t2\n"
-            + "-11\t4\n";
+    final public static String TABLE_DATA5 = "1\t3\n"
+            + "'11\t1\t=A1+B1\n";
 
     final public static String TABLE_DATA6 = "3\t4\n"
             + "12\t=C2\t3\t'Sample\n"
@@ -42,7 +42,8 @@ public final class Main {
         tableString = TABLE_DATA6;
 
         table = new Table(tableString);
-        table.buildDependencyTrees();
+        table.buildChildrenDependencyTrees();
+        table.buildParentDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
         System.out.println(table.getMatrix().printTable());

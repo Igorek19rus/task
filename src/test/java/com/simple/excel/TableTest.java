@@ -67,7 +67,8 @@ public class TableTest {
 
         constructChildrenDependenciesOfSimpleTable(tableToCompare);
         constructSimpleTableCellTypes(tableToCompare);
-        table.buildDependencyTrees();
+        table.buildChildrenDependencyTrees();
+        table.buildParentDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
         for (int i = 0; i < table.getMatrix().getRowSize(); i++) {
@@ -82,6 +83,7 @@ public class TableTest {
         table = new Table(CYCLE_TABLE);
         tableToCompare = new Table(CYCLE_TABLE);
         constructCycleTableCellTypes(tableToCompare);
+        table.buildChildrenDependencyTrees();
         for (int i = 0; i < table.getMatrix().getRowSize(); i++) {
             for (int j = 0; j < table.getMatrix().getColumnSize(); j++) {
                 assertEquals(table.getMatrix().getElement(i, j).getType(), tableToCompare.getMatrix().getElement(i, j).getType());
@@ -94,7 +96,8 @@ public class TableTest {
                 assertEquals(table.getMatrix().getElement(i, j).getChildrenCellDependencies(), tableToCompare.getMatrix().getElement(i, j).getChildrenCellDependencies());
             }
         }
-        table.buildDependencyTrees();
+
+        table.buildParentDependencyTrees();
         table.resolveCycleDependencies();
         table.calculationTable();
         assertEquals(resultCycleTable, table.getMatrix().printTable());
@@ -174,67 +177,67 @@ public class TableTest {
         Cell curCell;
 
         curCell = table.getMatrix().getElement(new CellId("B1"));
-        curCell.getChildrenCellDependencies().add(new CellId("A1"));
+        curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
         curCell = table.getMatrix().getElement(new CellId("D1"));
-        curCell.getChildrenCellDependencies().add(new CellId("E1"));
+        curCell.getChildrenCellDependencies().add(new Cell("E1"));
 
         curCell = table.getMatrix().getElement(new CellId("E1"));
-        curCell.getChildrenCellDependencies().add(new CellId("B2"));
+        curCell.getChildrenCellDependencies().add(new Cell("B2"));
 
         curCell = table.getMatrix().getElement(new CellId("B2"));
-        curCell.getChildrenCellDependencies().add(new CellId("A1"));
-        curCell.getChildrenCellDependencies().add(new CellId("D2"));
-        curCell.getChildrenCellDependencies().add(new CellId("E2"));
+        curCell.getChildrenCellDependencies().add(new Cell("A1"));
+        curCell.getChildrenCellDependencies().add(new Cell("D2"));
+        curCell.getChildrenCellDependencies().add(new Cell("E2"));
 
         curCell = table.getMatrix().getElement(new CellId("C2"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
         curCell = table.getMatrix().getElement(new CellId("D2"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
-        curCell.getChildrenCellDependencies().add(new CellId("B3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
         curCell = table.getMatrix().getElement(new CellId("E2"));
-        curCell.getChildrenCellDependencies().add(new CellId("B3"));
+        curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
         curCell = table.getMatrix().getElement(new CellId("B3"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
         curCell = table.getMatrix().getElement(new CellId("C3"));
-        curCell.getChildrenCellDependencies().add(new CellId("A1"));
+        curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
         curCell = table.getMatrix().getElement(new CellId("D3"));
-        curCell.getChildrenCellDependencies().add(new CellId("C3"));
+        curCell.getChildrenCellDependencies().add(new Cell("C3"));
     }
 
     private void constructChildrenDependenciesOfCycleTable(final Table table) {
         Cell curCell;
 
         curCell = table.getMatrix().getElement(new CellId("A1"));
-        curCell.getChildrenCellDependencies().add(new CellId("B2"));
+        curCell.getChildrenCellDependencies().add(new Cell("B2"));
 
         curCell = table.getMatrix().getElement(new CellId("D1"));
-        curCell.getChildrenCellDependencies().add(new CellId("B1"));
+        curCell.getChildrenCellDependencies().add(new Cell("B1"));
 
         curCell = table.getMatrix().getElement(new CellId("B2"));
-        curCell.getChildrenCellDependencies().add(new CellId("C2"));
-        curCell.getChildrenCellDependencies().add(new CellId("D2"));
-        curCell.getChildrenCellDependencies().add(new CellId("E2"));
+        curCell.getChildrenCellDependencies().add(new Cell("C2"));
+        curCell.getChildrenCellDependencies().add(new Cell("D2"));
+        curCell.getChildrenCellDependencies().add(new Cell("E2"));
 
         curCell = table.getMatrix().getElement(new CellId("C2"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
         curCell = table.getMatrix().getElement(new CellId("D2"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
-        curCell.getChildrenCellDependencies().add(new CellId("B3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
         curCell = table.getMatrix().getElement(new CellId("E2"));
-        curCell.getChildrenCellDependencies().add(new CellId("B3"));
+        curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
         curCell = table.getMatrix().getElement(new CellId("A3"));
-        curCell.getChildrenCellDependencies().add(new CellId("A1"));
+        curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
         curCell = table.getMatrix().getElement(new CellId("B3"));
-        curCell.getChildrenCellDependencies().add(new CellId("A3"));
+        curCell.getChildrenCellDependencies().add(new Cell("A3"));
     }
 }

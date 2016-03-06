@@ -64,7 +64,7 @@ public class ParserImpl implements Parser
         if (findPattern(STRING_PATTERN, sInTrim)) {
             return String.class;
         } else if (findPattern(INTEGER_PATTERN, sInTrim)) {
-            return Double.class;
+            return Integer.class;
         } else if (findPattern(REFERENCE_PATTERN, sInTrim)) {
             return ReferenceCell.class;
         }

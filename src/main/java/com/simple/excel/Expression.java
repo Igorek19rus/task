@@ -22,7 +22,7 @@ public interface Expression {
      * @return expression's result.
      * @throws Exception error by calculation.
      */
-    void calculate(final Map<String, String> data);
+    void calculate(final Map<CellId, Cell> data);
 
     /**
      * Parse children dependencies.

@@ -23,8 +23,8 @@ public class Cell {
     private ErrorMessage error;
     private Expression expression;
 
-    final private Set<CellId> childrenCellDependencies = new HashSet();
-    final private Set<CellId> parentCellDependencies = new HashSet();
+    final private Set<Cell> childrenCellDependencies = new HashSet();
+    final private Set<Cell> parentCellDependencies = new HashSet();
 
     public Cell(final String cellId) {
         this.cellId = new CellId(cellId);
@@ -85,7 +85,7 @@ public class Cell {
      *
      * @return cells linked to the current cell.
      */
-    public Set<CellId> getChildrenCellDependencies() {
+    public Set<Cell> getChildrenCellDependencies() {
         return childrenCellDependencies;
     }
 
@@ -94,16 +94,16 @@ public class Cell {
      *
      * @return depended cells from the current cell.
      */
-    public Set<CellId> getParentCellDependencies() {
+    public Set<Cell> getParentCellDependencies() {
         return parentCellDependencies;
     }
 
     /**
      * Calculate cell value.
      *
-     * @param expressionDependencyValues dependency expression data values.
+     * @param expressionDependencyValues dependency expression data values (cell id, result value).
      */
-    public void calculateValue(final Map<String, String> expressionDependencyValues) {
+    public void calculateValue(final Map<CellId, Cell> expressionDependencyValues) {
         if (type.equals(CellType.NULL)) {
             resultValue = "";
             return;
@@ -112,20 +112,20 @@ public class Cell {
                 if (expression.getCalculated() == null) {
                     expression.calculate(expressionDependencyValues);
                 }
-                Double resInt = Double.parseDouble(expression.getCalculated().getStringValue());
-                resultValue = formatDouble(resInt);
+                Integer resInt = Integer.parseInt(expression.getCalculated().getStringValue());
+                resultValue = resInt.toString();
                 return;
             } catch (Exception e) {
-                log.info("Error integer parsing : " + expression.getCalculated().getStringValue(), e);
+                log.info("Error by parsing : " + expression.getExpression(), e);
                 setErrorType(ErrorMessage.FORMAT_ERROR);
                 return;
             }
         } else if (type.equals(CellType.POSITIVE_NUMBER)) {
-            Double resInt = Double.parseDouble(originalValue);
-            if (resInt > 0) {
+            Integer resInt = Integer.parseInt(originalValue);
+            if (resInt >= 0) {
                 DecimalFormat format = new DecimalFormat();
                 format.setDecimalSeparatorAlwaysShown(false);
-                resultValue = formatDouble(resInt);
+                resultValue = resInt.toString();
             } else {
                 setErrorType(ErrorMessage.NEGATIVE_VALUE);
                 return;
@@ -133,11 +133,6 @@ public class Cell {
         } else if (type.equals(CellType.STRING)) {
             resultValue = originalValue.substring(1).trim();
         }
-    }
-
-    public static String formatDouble(final Double dbl) {
-        Integer result = dbl.intValue();
-        return result.toString();
     }
 
     /**
@@ -172,6 +167,9 @@ public class Cell {
         } catch (FormatErrorException ex) {
             log.info("Error parsing : " + originalValue);
             setErrorType(ErrorMessage.FORMAT_ERROR);
+        } catch (CellOperationException ex) {
+            log.info("Error cell operation : " + originalValue);
+            setErrorType(ErrorMessage.FORMAT_ERROR);
         }
     }
 
@@ -191,7 +189,6 @@ public class Cell {
 
     private void initExpressionTypeCell() {
         expression = new ExpressionImpl(originalValue, new ParserImpl());
-        initChildrenCellDependencies();
         error = ErrorMessage.NO_ERROR;
         type = CellType.EXPRESSION;
     }
@@ -208,13 +205,19 @@ public class Cell {
         resultValue = error.getError();
     }
 
-    public void initChildrenCellDependencies() {
-        if (expression != null) {
-            Set<CellId> first = expression.parseDependencies();
-            for (CellId cellId : first) {
-                childrenCellDependencies.add(cellId);
-            }
+    public Set<CellId> initChildrenCellIdDependencies() {
+        if (expression == null) {
+            return new HashSet();
         }
+        Set<CellId> result;
+        try {
+             result = expression.parseDependencies();
+        } catch (FormatErrorException ex) {
+            log.info(ex);
+            setErrorType(ErrorMessage.FORMAT_ERROR);
+            return  new HashSet();
+        }
+        return result;
     }
 
     public Expression getExpression() {

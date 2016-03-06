@@ -65,7 +65,7 @@ public class ExpressionImpl implements Expression {
         return rpnListInSplit;
     }
 
-    public void calculate(final Map<String, String> data) {
+    public void calculate(final Map<CellId, Cell> data) {
         List<DataWrapper> rightSideInSplit = getRPN(parser.parseExpression(expression));
         DataWrapper dAWrapper = null, dBWrapper = null;
         DataWrapper sTmp;
@@ -80,17 +80,8 @@ public class ExpressionImpl implements Expression {
                 }
                 dBWrapper = stack.pop();
                 dAWrapper = stack.pop();
-                if (!Number.class.isAssignableFrom(dAWrapper.getClazz()) || !Number.class.isAssignableFrom(dBWrapper.getClazz())) {
-                    throw new FormatErrorException("Unsupported operation for types " + dAWrapper.getClazz() + " and " + dBWrapper.getClazz());
-                }
-                Double dA;
-                Double dB;
-                try {
-                    dA = (Double) parseObjectFromString(dAWrapper);
-                    dB = (Double) parseObjectFromString(dBWrapper);
-                } catch (Exception ex) {
-                    throw new FormatErrorException("Parse term exception", ex);
-                }
+                Integer dA = Integer.parseInt(dAWrapper.getStringValue());
+                Integer dB = Integer.parseInt(dBWrapper.getStringValue());
                 Operation op = parseOperation(sTmp.getStringValue().charAt(0));
                 switch (op) {
                     case ADDITION:
@@ -101,7 +92,7 @@ public class ExpressionImpl implements Expression {
                         break;
                     case DIVISION:
                         if (dB == 0) {
-                            throw new FormatErrorException("Division by 0.");
+                            throw new CellOperationException("Division by 0.");
                         }
                         dA = dA / dB;
                         break;
@@ -111,17 +102,28 @@ public class ExpressionImpl implements Expression {
                     default:
                         throw new FormatErrorException("Unsupported_operation " + sTmp);
                 }
-                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dA)));
+                stack.push(new DataWrapper(Integer.class, dA.toString()));
             } else {
-                Double dAInteger;
-                if (sTmp.getClazz().equals(ReferenceCell.class)) {
-                    dAInteger = sTmp.getStringValue().charAt(0) == Operation.SUBTRACTION.getOperation() ?
-                            -1 * Double.parseDouble(data.get(sTmp.getStringValue().substring(1))) : Double.parseDouble(data.get(sTmp.getStringValue()));
+                Integer dAInteger;
+                if (sTmp.getClazz().equals(String.class)) {
+                    throw new CellOperationException("Unsupported expression with string type value.");
+                } else if (sTmp.getClazz().equals(ReferenceCell.class)) {
+                    final boolean unarySubtraction = sTmp.getStringValue().charAt(0) == Operation.SUBTRACTION.getOperation();
+                    Cell cell = unarySubtraction ? data.get(new CellId(sTmp.getStringValue().substring(1))) :
+                            data.get(new CellId(sTmp.getStringValue()));
+                    switch (cell.getType()) {
+                        case NULL:  dAInteger = 0;
+                                    break;
+                        case ERROR: throw new FormatErrorException("Cell children dependency has error type.");
+                        case STRING: throw new CellOperationException("Unsupported expression with string type value.");
+                            default: dAInteger = unarySubtraction ? -1 * Integer.parseInt(cell.getResultValue()) :
+                                    Integer.parseInt(cell.getResultValue());
+                    }
                 } else {
-                    dAInteger = Double.parseDouble(sTmp.getStringValue());
+                    dAInteger = Integer.parseInt(sTmp.getStringValue());
                 }
 
-                stack.push(new DataWrapper(Double.class, Cell.formatDouble(dAInteger)));
+                stack.push(new DataWrapper(Integer.class, dAInteger.toString()));
             }
         }
 
@@ -140,9 +142,5 @@ public class ExpressionImpl implements Expression {
             }
         }
         return directDependencies;
-    }
-
-    private <T> T parseObjectFromString(final DataWrapper<T> parseInfo) throws Exception {
-        return (T) parseInfo.getClazz().getConstructor(new Class[]{String.class}).newInstance(parseInfo.getStringValue());
     }
 }

@@ -3,10 +3,7 @@ package com.simple.excel;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Table {
 
@@ -37,7 +34,6 @@ public class Table {
 
         matrix = new DynamicMatrix(rowSize, colSize);
 
-        Map<String, String> noDependencies = new HashMap<String, String>();
         try {
             for (int k1 = 0; k1 < rowSize; k1++) {
                 String[] cellsInRow = rows[k1 + 1].split(cellPattern);
@@ -50,7 +46,7 @@ public class Table {
                     curCell.initType();
 
                     if (!curCell.getType().equals(Cell.CellType.EXPRESSION)) {
-                        curCell.calculateValue(noDependencies);
+                        curCell.calculateValue(new HashMap<CellId, Cell>());
                     }
                 }
             }
@@ -73,21 +69,19 @@ public class Table {
      * @param j       cell column index.
      * @throws Exception cycle dependencies exception.
      */
-    private void analyse(final int deep, final int visited[][], final int i, final int j) throws Exception {
+    private void analyse(final int deep, final int visited[][], final int i, final int j) throws CycleDependencyException {
         visited[i][j] = deep;
-        Cell cellIJ = matrix.getElement(i, j);
-        if (cellIJ.getType().equals(Cell.CellType.EXPRESSION)) {
-            for (CellId cellId : cellIJ.getChildrenCellDependencies()) {
-
-                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cellId);
-                Cell cell = matrix.getElement(cellId);
-                cell.getParentCellDependencies().add(cellIJ.getCellId());
-                cell.getParentCellDependencies().addAll(cellIJ.getParentCellDependencies());
+        Cell curCell = matrix.getElement(i, j);
+        if (curCell.getType().equals(Cell.CellType.EXPRESSION)) {
+            for (Cell cell : curCell.getChildrenCellDependencies()) {
+                Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cell.getCellId());
+                cell.getParentCellDependencies().add(curCell);
+                cell.getParentCellDependencies().addAll(curCell.getParentCellDependencies());
                 int deepValue = visited[cellIndexes.getFirst()][cellIndexes.getSecond()];
                 // If the current dependency's deep is less then the child dependencies deep it means that current cell links to to parent cell in the tree, so make cycle dependencies.
                 // The deep 0 means cell is not analyzed yet, so it's a not a cycle dependencies.
                 if (deepValue < deep && deepValue != 0) {
-                    throw new Exception("Detected cycle dependencies");
+                    throw new CycleDependencyException("Detected cycle dependencies");
                 } else {
                     analyse(deep + 1, visited, cellIndexes.getFirst(), cellIndexes.getSecond());
                 }
@@ -98,14 +92,29 @@ public class Table {
     /**
      * Build parent dependency trees. Parent dependency of the current cell is a cell collection which reference to the current cell.
      */
-    public void buildDependencyTrees() {
+    public void buildParentDependencyTrees() {
         for (int i = 0; i < matrix.getRowSize(); i++) {
             for (int j = 0; j < matrix.getColumnSize(); j++) {
                 int[][] visited = new int[matrix.getRowSize()][matrix.getColumnSize()];
                 try {
                     analyse(INITIAL_DEEP, visited, i, j);
-                } catch (Exception e) {
+                } catch (CycleDependencyException e) {
                     log.error("Detected cycle dependencies of the cell " + matrix.getElement(i, j).getCellId(), e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Build children dependency trees. Parent dependency of the current cell is a cell collection which reference to the current cell.
+     */
+    public void buildChildrenDependencyTrees() {
+        for (int i = 0; i < matrix.getRowSize(); i++) {
+            for (int j = 0; j < matrix.getColumnSize(); j++) {
+                Cell curCell = matrix.getElement(i, j);
+                Set<CellId> childrenCellIds = curCell.initChildrenCellIdDependencies();
+                for (CellId cellId : childrenCellIds) {
+                    curCell.getChildrenCellDependencies().add(matrix.getElement(cellId));
                 }
             }
         }
@@ -119,7 +128,8 @@ public class Table {
      * @return cycle dependency cell flag.
      */
     public boolean isCycleDependencies(final int i, final int j) {
-        return matrix.getElement(i, j).getParentCellDependencies().contains(matrix.getElement(i, j).getCellId());
+        Cell curCell = matrix.getElement(i, j);
+        return curCell.getParentCellDependencies().contains(curCell);
     }
 
     /**
@@ -129,8 +139,8 @@ public class Table {
         for (int i = 0; i < matrix.getRowSize(); i++) {
             for (int j = 0; j < matrix.getColumnSize(); j++) {
                 if (isCycleDependencies(i, j)) {
-                    for (CellId cellId : matrix.getElement(i, j).getParentCellDependencies()) {
-                        matrix.getElement(cellId).setErrorType(Cell.ErrorMessage.CYCLE_DEPENDENCIES);
+                    for (Cell cell : matrix.getElement(i, j).getParentCellDependencies()) {
+                        cell.setErrorType(Cell.ErrorMessage.CYCLE_DEPENDENCIES);
                     }
                 }
             }
@@ -142,27 +152,25 @@ public class Table {
      *
      * @param i                     row cell.
      * @param j                     column cell.
-     * @param childDependencyValues map of the children (string cell id - calculated string value) information.
+     * @param childDependencyCalculated map of the children (string cell id - calculated string value) information.
      * @return string value.
      */
-    private String calculateCell(final int i, final int j, final Map<String, String> childDependencyValues) {
+    private void calculateCell(final int i, final int j, final Map<CellId, Cell> childDependencyCalculated) {
         if (i > matrix.getRowSize() || j > matrix.getColumnSize()) {
             throw new ArrayIndexOutOfBoundsException("Out of bound exception.");
         }
         Cell currentCell = matrix.getElement(i, j);
         if (currentCell.getType().equals(Cell.CellType.EXPRESSION)) {
 
-            for (CellId childrenCellId : currentCell.getChildrenCellDependencies()) {
-                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndexes(childrenCellId);
-                if (childDependencyValues.get(childrenCellId.toString()) == null) {
-                    childDependencyValues.put(childrenCellId.toString(), calculateCell(childrenCellIndex.getFirst(), childrenCellIndex.getSecond(), childDependencyValues));
+            for (Cell childrenCell : currentCell.getChildrenCellDependencies()) {
+                final Pair<Integer, Integer> childrenCellIndex = CellId.cellIdToIndexes(childrenCell.getCellId());
+                if (childDependencyCalculated.get(childrenCell.getCellId()) == null) {
+                    calculateCell(childrenCellIndex.getFirst(), childrenCellIndex.getSecond(), childDependencyCalculated);
+                    childDependencyCalculated.put(childrenCell.getCellId(), childrenCell);
                 }
             }
-            currentCell.calculateValue(childDependencyValues);
-            childDependencyValues.put(currentCell.getCellId().toString(), currentCell.getResultValue());
-            return currentCell.getResultValue();
-        } else {
-            return currentCell.getResultValue();
+            currentCell.calculateValue(childDependencyCalculated);
+            childDependencyCalculated.put(currentCell.getCellId(), currentCell);
         }
     }
 
@@ -170,12 +178,12 @@ public class Table {
      * Calculate displayed cell values.
      */
     public void calculationTable() {
-        Map<String, String> childDependencyValues = new HashMap();
+        Map<CellId, Cell> childDependencyCalculated = new HashMap();
         for (int i = 0; i < matrix.getRowSize(); i++) {
             for (int j = 0; j < matrix.getColumnSize(); j++) {
                 Cell cell = matrix.getElement(i, j);
                 if (cell.getType().equals(Cell.CellType.EXPRESSION)) {
-                    calculateCell(i, j, childDependencyValues);
+                    calculateCell(i, j, childDependencyCalculated);
                 }
             }
         }
