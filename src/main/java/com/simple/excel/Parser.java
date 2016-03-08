@@ -9,8 +9,8 @@ public interface Parser {
     /**
      * Parse type of the term or operation.
      *
-     * @param sIn
-     * @return
+     * @param sIn string to parse.
+     * @return class of possible term or operation.
      */
     Class parseType(final String sIn);
 

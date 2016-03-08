@@ -34,7 +34,7 @@ public class ExpressionImpl implements Expression {
      *
      * @param rightSideInSplit expression split by operations.
      * @return reverse polish notation.
-     * @throws Exception error by parsing expression.
+     * @throws FormatErrorException exception error by parsing expression.
      */
     private List<DataWrapper> getRPN(final List<DataWrapper> rightSideInSplit) {
         if (rightSideInSplit.get(rightSideInSplit.size() - 1).getClazz().equals(Operation.class)) {
@@ -71,7 +71,7 @@ public class ExpressionImpl implements Expression {
     @SuppressWarnings("PMD.MissingBreakInSwitch")
     public void calculate(final Map<CellId, Cell> data) {
         List<DataWrapper> rightSideInSplit = getRPN(parser.parseExpression(expression));
-        DataWrapper dAWrapper = null, dBWrapper = null;
+        DataWrapper dAWrapper, dBWrapper;
         DataWrapper sTmp;
         Deque<DataWrapper> stack = new ArrayDeque();
         Iterator<DataWrapper> it = rightSideInSplit.iterator();

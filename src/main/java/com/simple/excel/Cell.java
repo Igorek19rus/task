@@ -39,7 +39,7 @@ public class Cell {
 
     /**
      * Get possible error message by parsing or calculation.
-     * @return
+     * @return get error message.
      */
     public ErrorMessage getError() {
         return error;
@@ -110,7 +110,6 @@ public class Cell {
     public void calculateValue(final Map<CellId, Cell> expressionDependencyValues) {
         if (type.equals(CellType.NULL)) {
             resultValue = "";
-            return;
         } else if (type.equals(CellType.EXPRESSION)) {
             try {
                 if (expression.getCalculated() == null) {
@@ -118,11 +117,9 @@ public class Cell {
                 }
                 Integer resInt = Integer.parseInt(expression.getCalculated().getStringValue());
                 resultValue = resInt.toString();
-                return;
             } catch (Exception e) {
                 log.info("Error by parsing : " + expression.getExpression(), e);
                 setErrorType(ErrorMessage.FORMAT_ERROR);
-                return;
             }
         } else if (type.equals(CellType.POSITIVE_NUMBER)) {
             Integer resInt = Integer.parseInt(originalValue);
@@ -132,7 +129,6 @@ public class Cell {
                 resultValue = resInt.toString();
             } else {
                 setErrorType(ErrorMessage.NEGATIVE_VALUE);
-                return;
             }
         } else if (type.equals(CellType.STRING)) {
             resultValue = originalValue.substring(1).trim();
@@ -297,6 +293,6 @@ public class Cell {
         POSITIVE_NUMBER,
         STRING,
         EXPRESSION,
-        ERROR;
+        ERROR
     }
 }

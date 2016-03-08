@@ -20,8 +20,8 @@ public interface Expression {
      * Calculate expression.
      *
      * @param data map of CellId-cell dependencies.
-     * @return expression's result.
-     * @throws Exception error by calculation.
+     * @throws FormatErrorException exception error by calculation.
+     * @throws CellOperationException exception error by incompatible types to operate.
      */
     void calculate(final Map<CellId, Cell> data);
 
