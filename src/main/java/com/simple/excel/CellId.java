@@ -3,7 +3,7 @@ package com.simple.excel;
 /**
  * Cell identification.
  */
-public class CellId implements Comparable {
+public class CellId{
 
     private final char column;
     private final int row;
@@ -31,6 +31,11 @@ public class CellId implements Comparable {
         return column + String.valueOf(row);
     }
 
+    /**
+     * Parse reference label.
+     * @param stringReference reference label.
+     * @return a pair of int row and char column label.
+     */
     public static Pair<Character, Integer> parseReference(final String stringReference) {
         Character column;
         int startRowIndex;
@@ -74,16 +79,6 @@ public class CellId implements Comparable {
      */
     public static Pair<Character, Integer> indexToCellIdLabel(final int row, final int column) {
         return new Pair<Character, Integer>((char) (column + 65), row + 1);
-    }
-
-    public int compareTo(final Object o) {
-        CellId entry = (CellId) o;
-        int rowResult = this.row - entry.getRow();
-        if (rowResult != 0) {
-            return (int) rowResult / Math.abs(rowResult);
-        } else {
-            return new Character(this.column).compareTo(new Character(entry.getColumn()));
-        }
     }
 
     @Override

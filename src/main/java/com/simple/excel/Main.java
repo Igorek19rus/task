@@ -36,16 +36,16 @@ public final class Main {
     @SuppressWarnings("PMD")
     public static void main(final String[] args) {
         String tableString;
-        Table table;
+        SimpleExcel simpleExcel;
 
         tableString = TABLE_DATA6;
 
-        table = new Table(tableString);
-        table.buildChildrenDependencyTrees();
-        table.buildParentDependencyTrees();
-        table.resolveCycleDependencies();
-        table.calculationTable();
-        System.out.println(table.getMatrix().printTable());
+        simpleExcel = new SimpleExcel(tableString);
+        simpleExcel.buildChildrenDependencyTrees();
+        simpleExcel.buildParentDependencyTrees();
+        simpleExcel.resolveCycleDependencies();
+        simpleExcel.calculationTable();
+        System.out.println(simpleExcel.getMatrix().printTable());
         System.out.println();
     }
 }

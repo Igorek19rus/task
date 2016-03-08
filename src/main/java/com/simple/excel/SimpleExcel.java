@@ -5,18 +5,19 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 
-public class Table {
+public class SimpleExcel {
 
-    private static Logger log = LogManager.getLogger(Table.class);
+    private static Logger log = LogManager.getLogger(SimpleExcel.class);
 
-    final private DynamicMatrix matrix;
+    final private Matrix matrix;
 
     final static private int INITIAL_DEEP = 1;
 
-    public Table(final String data) {
+    public SimpleExcel(final String data) {
         String rowPattern = "\n";
         String cellPattern = "\t";
 
+        // matrix initialization.
         String[] rows = data.split(rowPattern);
         String[] dimensions = rows[0].split(cellPattern);
         int rowSize;
@@ -32,7 +33,7 @@ public class Table {
             throw new FormatErrorException("Error table parse. Size error exception.");
         }
 
-        matrix = new DynamicMatrix(rowSize, colSize);
+        matrix = new Matrix(rowSize, colSize);
 
         try {
             for (int k1 = 0; k1 < rowSize; k1++) {
@@ -56,12 +57,12 @@ public class Table {
         }
     }
 
-    public DynamicMatrix getMatrix() {
+    public Matrix getMatrix() {
         return matrix;
     }
 
     /**
-     * Analyze cycle dependencies and add parent related cells to the parent dependency collection.
+     * Define parent related cells and analyze cycle dependencies of the cell.
      *
      * @param deep    analyze deep.
      * @param visited collection of the analyzing cells which store the deep.
@@ -90,7 +91,7 @@ public class Table {
     }
 
     /**
-     * Build parent dependency trees. Parent dependency of the current cell is a cell collection which reference to the current cell.
+     * Build parent dependency trees by depth-first search and catch the cycle dependencies. Parent dependency of the current cell is a cell collection which reference to the current cell.
      */
     public void buildParentDependencyTrees() {
         for (int i = 0; i < matrix.getRowSize(); i++) {
@@ -133,7 +134,7 @@ public class Table {
     }
 
     /**
-     * Resolve the cycle dependencies problem by setting cycle dependencies cell type.
+     * Resolve the cycle dependencies problem by the setting cycle dependencies cell type.
      */
     public void resolveCycleDependencies() {
         for (int i = 0; i < matrix.getRowSize(); i++) {
@@ -148,12 +149,11 @@ public class Table {
     }
 
     /**
-     * Return calculated output cell value.
+     * Calculate displayed cell value.
      *
      * @param i row cell.
      * @param j column cell.
      * @param childDependencyCalculated map of the children (string cell id - calculated string value) information.
-     * @return string value.
      */
     private void calculateCell(final int i, final int j, final Map<CellId, Cell> childDependencyCalculated) {
         if (i > matrix.getRowSize() || j > matrix.getColumnSize()) {
@@ -189,12 +189,15 @@ public class Table {
         }
     }
 
-    public static class DynamicMatrix {
+    /**
+     * Represent matrix of the sheet.
+     */
+    public static class Matrix {
         final private List<List<Cell>> cells;
         final private int rowSize;
         final private int columnSize;
 
-        public DynamicMatrix(final int rowSize, final int columnSize) {
+        public Matrix(final int rowSize, final int columnSize) {
             this.rowSize = rowSize;
             this.columnSize = columnSize;
 
@@ -237,6 +240,10 @@ public class Table {
             return cells.get(cellIdToIndex.getFirst()).get(cellIdToIndex.getSecond());
         }
 
+        /**
+         * Show output of the matrix.
+         * @return
+         */
         public String printTable() {
             StringBuilder builder = new StringBuilder();
             for (List<Cell> cellList : cells) {

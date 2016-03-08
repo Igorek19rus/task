@@ -7,11 +7,11 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- * Table cell.
+ * SimpleExcel cell.
  */
 public class Cell {
 
-    private static Logger log = LogManager.getLogger(Table.class);
+    private static Logger log = LogManager.getLogger(SimpleExcel.class);
 
     private String originalValue = "";
     private String resultValue = "";
@@ -37,6 +37,10 @@ public class Cell {
         initNullTypeCell();
     }
 
+    /**
+     * Get possible error message by parsing or calculation.
+     * @return
+     */
     public ErrorMessage getError() {
         return error;
     }
@@ -99,9 +103,9 @@ public class Cell {
     }
 
     /**
-     * Calculate cell value.
+     * Calculate cell value. This value will be the result value.
      *
-     * @param expressionDependencyValues dependency expression data values (cell id, result value).
+     * @param expressionDependencyValues dependency expression data values (cell id, cell).
      */
     public void calculateValue(final Map<CellId, Cell> expressionDependencyValues) {
         if (type.equals(CellType.NULL)) {
@@ -173,6 +177,9 @@ public class Cell {
         }
     }
 
+    /**
+     * Initialize the null type cell.
+     */
     private void initNullTypeCell() {
         originalValue = "";
         expression = null;
@@ -180,6 +187,9 @@ public class Cell {
         error = ErrorMessage.NO_ERROR;
     }
 
+    /**
+     * Initialize the string type cell.
+     */
     private void initStringTypeCell() {
         expression = null;
         error = ErrorMessage.NO_ERROR;
@@ -187,6 +197,9 @@ public class Cell {
         resultValue = originalValue;
     }
 
+    /**
+     * Initialize the expression type cell.
+     */
     private void initExpressionTypeCell() {
         expression = new ExpressionImpl(originalValue, new ParserImpl());
         error = ErrorMessage.NO_ERROR;
@@ -198,6 +211,10 @@ public class Cell {
         type = CellType.POSITIVE_NUMBER;
     }
 
+    /**
+     * Initialize the error type cell.
+     * @param error error message.
+     */
     public void setErrorType(final ErrorMessage error) {
         expression = null;
         type = CellType.ERROR;
@@ -205,6 +222,10 @@ public class Cell {
         resultValue = error.getError();
     }
 
+    /**
+     * Initialize the children cell dependencies by parsing the expression.
+     * @return the set of cell id's which depended on the cell or empty set where no expression.
+     */
     public Set<CellId> initChildrenCellIdDependencies() {
         if (expression == null) {
             return new HashSet();
@@ -248,6 +269,9 @@ public class Cell {
         return cellId.hashCode();
     }
 
+    /**
+     * Define the cell's error message.
+     */
     public enum ErrorMessage {
         NEGATIVE_VALUE("#negative_number"),
         CYCLE_DEPENDENCIES("#cycle_dependencies"),
@@ -265,6 +289,9 @@ public class Cell {
         }
     }
 
+    /**
+     * Define the cell's type.
+     */
     enum CellType {
         NULL,
         POSITIVE_NUMBER,

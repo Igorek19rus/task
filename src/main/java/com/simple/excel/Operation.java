@@ -41,15 +41,10 @@ public enum Operation {
 
     /**
      * Returns priority operation.
-     *
-     * @param op char of operation.
+     * @param op operation string value.
      * @return byte operation priority.
      */
     public static byte opPrior(final char op) {
-        return 1;
-    }
-
-    public static byte opPrior(final String op) {
         return 1;
     }
 }

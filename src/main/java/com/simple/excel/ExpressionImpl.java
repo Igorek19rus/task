@@ -5,6 +5,9 @@ import java.util.*;
 import static com.simple.excel.Operation.opPrior;
 import static com.simple.excel.Operation.parseOperation;
 
+/**
+ * Implementation which uses the reverse polish notation to calculate expression.
+ */
 public class ExpressionImpl implements Expression {
 
     final private String expression;
@@ -29,7 +32,7 @@ public class ExpressionImpl implements Expression {
     /**
      * Get reverse polish notation of the expression.
      *
-     * @param rightSideInSplit string expression.
+     * @param rightSideInSplit expression split by operations.
      * @return reverse polish notation.
      * @throws Exception error by parsing expression.
      */
@@ -47,7 +50,7 @@ public class ExpressionImpl implements Expression {
             if (exprTerm.getClazz().equals(Operation.class)) {
                 while (sbStack.size() > 0) {
                     cTmp = sbStack.peek();
-                    if (cTmp.getClazz().equals(Operation.class) && opPrior(cTmp.getStringValue()) <= opPrior(cTmp.getStringValue())) {
+                    if (cTmp.getClazz().equals(Operation.class) && opPrior(cTmp.getStringValue().charAt(0)) <= opPrior(cTmp.getStringValue().charAt(0))) {
                         rpnListInSplit.add(sbStack.pop());
                     }
                 }

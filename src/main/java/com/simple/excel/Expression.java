@@ -10,7 +10,7 @@ public interface Expression {
     String getExpression();
 
     /**
-     * Get calculated value.
+     * Get calculated value of the expression.
      *
      * @return calculated value.
      */
@@ -19,7 +19,7 @@ public interface Expression {
     /**
      * Calculate expression.
      *
-     * @param data map of CellId-value dependencies.
+     * @param data map of CellId-cell dependencies.
      * @return expression's result.
      * @throws Exception error by calculation.
      */

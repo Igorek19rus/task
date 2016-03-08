@@ -15,10 +15,10 @@ public interface Parser {
     Class parseType(final String sIn);
 
     /**
-     * Parse expression.
+     * Parse expression and split it by operations.
      *
      * @param expression expression.
-     * @return list of wrapper data.
+     * @return expression split by operations.
      */
     List<DataWrapper> parseExpression(final String expression);
 

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Expression parser which split the expression by using patterns of the possible term and operation.
+ */
 public class ParserImpl implements Parser {
     final static String REFERENCE_PATTERN = "^-?[A-Za-z][0-9]+$";
     final static String INTEGER_PATTERN = "^-?[0-9]+$";
