@@ -71,173 +71,173 @@ public class SimpleExcelTest {
         simpleExcel.buildParentDependencyTrees();
         simpleExcel.resolveCycleDependencies();
         simpleExcel.calculationTable();
-        for (int i = 0; i < simpleExcel.getMatrix().getRowSize(); i++) {
-            for (int j = 0; j < simpleExcel.getMatrix().getColumnSize(); j++) {
-                assertEquals(simpleExcel.getMatrix().getElement(i, j).getChildrenCellDependencies(), simpleExcelToCompare.getMatrix().getElement(i, j).getChildrenCellDependencies());
-                assertEquals(simpleExcel.getMatrix().getElement(i, j).getType(), simpleExcelToCompare.getMatrix().getElement(i, j).getType());
+        for (int i = 0; i < simpleExcel.getTable().getRowSize(); i++) {
+            for (int j = 0; j < simpleExcel.getTable().getColumnSize(); j++) {
+                assertEquals(simpleExcel.getTable().getElement(i, j).getChildrenCellDependencies(), simpleExcelToCompare.getTable().getElement(i, j).getChildrenCellDependencies());
+                assertEquals(simpleExcel.getTable().getElement(i, j).getType(), simpleExcelToCompare.getTable().getElement(i, j).getType());
             }
         }
 
-        assertEquals(resultSimpleTable, simpleExcel.getMatrix().printTable());
+        assertEquals(resultSimpleTable, simpleExcel.getTable().printTable());
 
         simpleExcel = new SimpleExcel(CYCLE_TABLE);
         simpleExcelToCompare = new SimpleExcel(CYCLE_TABLE);
         constructCycleTableCellTypes(simpleExcelToCompare);
         simpleExcel.buildChildrenDependencyTrees();
-        for (int i = 0; i < simpleExcel.getMatrix().getRowSize(); i++) {
-            for (int j = 0; j < simpleExcel.getMatrix().getColumnSize(); j++) {
-                assertEquals(simpleExcel.getMatrix().getElement(i, j).getType(), simpleExcelToCompare.getMatrix().getElement(i, j).getType());
+        for (int i = 0; i < simpleExcel.getTable().getRowSize(); i++) {
+            for (int j = 0; j < simpleExcel.getTable().getColumnSize(); j++) {
+                assertEquals(simpleExcel.getTable().getElement(i, j).getType(), simpleExcelToCompare.getTable().getElement(i, j).getType());
             }
         }
         constructChildrenDependenciesOfCycleTable(simpleExcelToCompare);
-        for (int i = 0; i < simpleExcel.getMatrix().getRowSize(); i++) {
-            for (int j = 0; j < simpleExcel.getMatrix().getColumnSize(); j++) {
-                assertEquals(simpleExcel.getMatrix().getElement(i, j).getType(), simpleExcelToCompare.getMatrix().getElement(i, j).getType());
-                assertEquals(simpleExcel.getMatrix().getElement(i, j).getChildrenCellDependencies(), simpleExcelToCompare.getMatrix().getElement(i, j).getChildrenCellDependencies());
+        for (int i = 0; i < simpleExcel.getTable().getRowSize(); i++) {
+            for (int j = 0; j < simpleExcel.getTable().getColumnSize(); j++) {
+                assertEquals(simpleExcel.getTable().getElement(i, j).getType(), simpleExcelToCompare.getTable().getElement(i, j).getType());
+                assertEquals(simpleExcel.getTable().getElement(i, j).getChildrenCellDependencies(), simpleExcelToCompare.getTable().getElement(i, j).getChildrenCellDependencies());
             }
         }
 
         simpleExcel.buildParentDependencyTrees();
         simpleExcel.resolveCycleDependencies();
         simpleExcel.calculationTable();
-        assertEquals(resultCycleTable, simpleExcel.getMatrix().printTable());
+        assertEquals(resultCycleTable, simpleExcel.getTable().printTable());
     }
 
     private void constructSimpleTableCellTypes(final SimpleExcel simpleExcel) {
         Cell curCell;
 
-        curCell = simpleExcel.getMatrix().getElement(0, 0);
+        curCell = simpleExcel.getTable().getElement(0, 0);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(0, 1);
+        curCell = simpleExcel.getTable().getElement(0, 1);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(0, 2);
+        curCell = simpleExcel.getTable().getElement(0, 2);
         curCell.setType(Cell.CellType.STRING);
-        curCell = simpleExcel.getMatrix().getElement(0, 3);
+        curCell = simpleExcel.getTable().getElement(0, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(0, 4);
+        curCell = simpleExcel.getTable().getElement(0, 4);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 0);
+        curCell = simpleExcel.getTable().getElement(1, 0);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(1, 1);
+        curCell = simpleExcel.getTable().getElement(1, 1);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 2);
+        curCell = simpleExcel.getTable().getElement(1, 2);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 3);
+        curCell = simpleExcel.getTable().getElement(1, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 4);
+        curCell = simpleExcel.getTable().getElement(1, 4);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 0);
+        curCell = simpleExcel.getTable().getElement(2, 0);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(2, 1);
+        curCell = simpleExcel.getTable().getElement(2, 1);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 2);
+        curCell = simpleExcel.getTable().getElement(2, 2);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 3);
+        curCell = simpleExcel.getTable().getElement(2, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 4);
+        curCell = simpleExcel.getTable().getElement(2, 4);
         curCell.setType(Cell.CellType.ERROR);
     }
 
     private void constructCycleTableCellTypes(final SimpleExcel simpleExcel) {
         Cell curCell;
 
-        curCell = simpleExcel.getMatrix().getElement(0, 0);
+        curCell = simpleExcel.getTable().getElement(0, 0);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(0, 1);
+        curCell = simpleExcel.getTable().getElement(0, 1);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(0, 2);
+        curCell = simpleExcel.getTable().getElement(0, 2);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(0, 3);
+        curCell = simpleExcel.getTable().getElement(0, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(0, 4);
+        curCell = simpleExcel.getTable().getElement(0, 4);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(1, 0);
+        curCell = simpleExcel.getTable().getElement(1, 0);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(1, 1);
+        curCell = simpleExcel.getTable().getElement(1, 1);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 2);
+        curCell = simpleExcel.getTable().getElement(1, 2);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 3);
+        curCell = simpleExcel.getTable().getElement(1, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(1, 4);
+        curCell = simpleExcel.getTable().getElement(1, 4);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 0);
+        curCell = simpleExcel.getTable().getElement(2, 0);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 1);
+        curCell = simpleExcel.getTable().getElement(2, 1);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 2);
+        curCell = simpleExcel.getTable().getElement(2, 2);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
-        curCell = simpleExcel.getMatrix().getElement(2, 3);
+        curCell = simpleExcel.getTable().getElement(2, 3);
         curCell.setType(Cell.CellType.EXPRESSION);
-        curCell = simpleExcel.getMatrix().getElement(2, 4);
+        curCell = simpleExcel.getTable().getElement(2, 4);
         curCell.setType(Cell.CellType.POSITIVE_NUMBER);
     }
 
     private void constructChildrenDependenciesOfSimpleTable(final SimpleExcel simpleExcel) {
         Cell curCell;
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("B1"));
+        curCell = simpleExcel.getTable().getElement(new CellId("B1"));
         curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("D1"));
+        curCell = simpleExcel.getTable().getElement(new CellId("D1"));
         curCell.getChildrenCellDependencies().add(new Cell("E1"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("E1"));
+        curCell = simpleExcel.getTable().getElement(new CellId("E1"));
         curCell.getChildrenCellDependencies().add(new Cell("B2"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("B2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("B2"));
         curCell.getChildrenCellDependencies().add(new Cell("A1"));
         curCell.getChildrenCellDependencies().add(new Cell("D2"));
         curCell.getChildrenCellDependencies().add(new Cell("E2"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("C2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("C2"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("D2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("D2"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
         curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("E2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("E2"));
         curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("B3"));
+        curCell = simpleExcel.getTable().getElement(new CellId("B3"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("C3"));
+        curCell = simpleExcel.getTable().getElement(new CellId("C3"));
         curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("D3"));
+        curCell = simpleExcel.getTable().getElement(new CellId("D3"));
         curCell.getChildrenCellDependencies().add(new Cell("C3"));
     }
 
     private void constructChildrenDependenciesOfCycleTable(final SimpleExcel simpleExcel) {
         Cell curCell;
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("A1"));
+        curCell = simpleExcel.getTable().getElement(new CellId("A1"));
         curCell.getChildrenCellDependencies().add(new Cell("B2"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("D1"));
+        curCell = simpleExcel.getTable().getElement(new CellId("D1"));
         curCell.getChildrenCellDependencies().add(new Cell("B1"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("B2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("B2"));
         curCell.getChildrenCellDependencies().add(new Cell("C2"));
         curCell.getChildrenCellDependencies().add(new Cell("D2"));
         curCell.getChildrenCellDependencies().add(new Cell("E2"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("C2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("C2"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("D2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("D2"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
         curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("E2"));
+        curCell = simpleExcel.getTable().getElement(new CellId("E2"));
         curCell.getChildrenCellDependencies().add(new Cell("B3"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("A3"));
+        curCell = simpleExcel.getTable().getElement(new CellId("A3"));
         curCell.getChildrenCellDependencies().add(new Cell("A1"));
 
-        curCell = simpleExcel.getMatrix().getElement(new CellId("B3"));
+        curCell = simpleExcel.getTable().getElement(new CellId("B3"));
         curCell.getChildrenCellDependencies().add(new Cell("A3"));
     }
 }

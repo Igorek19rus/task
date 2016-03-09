@@ -5,11 +5,14 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 
+/**
+ * Simple excel is a software program that used for storing, organizing manipulating data.
+ */
 public class SimpleExcel {
 
     private static Logger log = LogManager.getLogger(SimpleExcel.class);
 
-    final private Matrix matrix;
+    final private Table table;
 
     final static private int INITIAL_DEEP = 1;
 
@@ -17,7 +20,7 @@ public class SimpleExcel {
         String rowPattern = "\n";
         String cellPattern = "\t";
 
-        // matrix initialization.
+        // table initialization.
         String[] rows = data.split(rowPattern);
         String[] dimensions = rows[0].split(cellPattern);
         int rowSize;
@@ -33,7 +36,7 @@ public class SimpleExcel {
             throw new FormatErrorException("Error table parse. Size error exception.");
         }
 
-        matrix = new Matrix(rowSize, colSize);
+        table = new Table(rowSize, colSize);
 
         try {
             for (int k1 = 0; k1 < rowSize; k1++) {
@@ -42,7 +45,7 @@ public class SimpleExcel {
                     throw new FormatErrorException("Error table parse. Size error exception");
                 }
                 for (int k2 = 0; k2 < colSize; k2++) {
-                    Cell curCell = matrix.getElement(k1, k2);
+                    Cell curCell = table.getElement(k1, k2);
                     curCell.setOriginalValue(cellsInRow[k2]);
                     curCell.initType();
 
@@ -57,8 +60,8 @@ public class SimpleExcel {
         }
     }
 
-    public Matrix getMatrix() {
-        return matrix;
+    public Table getTable() {
+        return table;
     }
 
     /**
@@ -68,11 +71,11 @@ public class SimpleExcel {
      * @param visited collection of the analyzing cells which store the deep.
      * @param i       cell row index.
      * @param j       cell column index.
-     * @throws Exception cycle dependencies exception.
+     * @throws CycleDependencyException cycle dependencies exception.
      */
     private void analyse(final int deep, final int visited[][], final int i, final int j) throws CycleDependencyException {
         visited[i][j] = deep;
-        Cell curCell = matrix.getElement(i, j);
+        Cell curCell = table.getElement(i, j);
         if (curCell.getType().equals(Cell.CellType.EXPRESSION)) {
             for (Cell cell : curCell.getChildrenCellDependencies()) {
                 Pair<Integer, Integer> cellIndexes = CellId.cellIdToIndexes(cell.getCellId());
@@ -94,13 +97,13 @@ public class SimpleExcel {
      * Build parent dependency trees by depth-first search and catch the cycle dependencies. Parent dependency of the current cell is a cell collection which reference to the current cell.
      */
     public void buildParentDependencyTrees() {
-        for (int i = 0; i < matrix.getRowSize(); i++) {
-            for (int j = 0; j < matrix.getColumnSize(); j++) {
-                int[][] visited = new int[matrix.getRowSize()][matrix.getColumnSize()];
+        for (int i = 0; i < table.getRowSize(); i++) {
+            for (int j = 0; j < table.getColumnSize(); j++) {
+                int[][] visited = new int[table.getRowSize()][table.getColumnSize()];
                 try {
                     analyse(INITIAL_DEEP, visited, i, j);
                 } catch (CycleDependencyException e) {
-                    log.error("Detected cycle dependencies of the cell " + matrix.getElement(i, j).getCellId(), e);
+                    log.error("Detected cycle dependencies of the cell " + table.getElement(i, j).getCellId(), e);
                 }
             }
         }
@@ -110,12 +113,12 @@ public class SimpleExcel {
      * Build children dependency trees. Parent dependency of the current cell is a cell collection which reference to the current cell.
      */
     public void buildChildrenDependencyTrees() {
-        for (int i = 0; i < matrix.getRowSize(); i++) {
-            for (int j = 0; j < matrix.getColumnSize(); j++) {
-                Cell curCell = matrix.getElement(i, j);
+        for (int i = 0; i < table.getRowSize(); i++) {
+            for (int j = 0; j < table.getColumnSize(); j++) {
+                Cell curCell = table.getElement(i, j);
                 Set<CellId> childrenCellIds = curCell.initChildrenCellIdDependencies();
                 for (CellId cellId : childrenCellIds) {
-                    curCell.getChildrenCellDependencies().add(matrix.getElement(cellId));
+                    curCell.getChildrenCellDependencies().add(table.getElement(cellId));
                 }
             }
         }
@@ -129,7 +132,7 @@ public class SimpleExcel {
      * @return cycle dependency cell flag.
      */
     public boolean isCycleDependencies(final int i, final int j) {
-        Cell curCell = matrix.getElement(i, j);
+        Cell curCell = table.getElement(i, j);
         return curCell.getParentCellDependencies().contains(curCell);
     }
 
@@ -137,10 +140,10 @@ public class SimpleExcel {
      * Resolve the cycle dependencies problem by the setting cycle dependencies cell type.
      */
     public void resolveCycleDependencies() {
-        for (int i = 0; i < matrix.getRowSize(); i++) {
-            for (int j = 0; j < matrix.getColumnSize(); j++) {
+        for (int i = 0; i < table.getRowSize(); i++) {
+            for (int j = 0; j < table.getColumnSize(); j++) {
                 if (isCycleDependencies(i, j)) {
-                    for (Cell cell : matrix.getElement(i, j).getParentCellDependencies()) {
+                    for (Cell cell : table.getElement(i, j).getParentCellDependencies()) {
                         cell.setErrorType(Cell.ErrorMessage.CYCLE_DEPENDENCIES);
                     }
                 }
@@ -149,17 +152,18 @@ public class SimpleExcel {
     }
 
     /**
-     * Calculate displayed cell value.
+     * Calculate displayed cell value. The calculation starts with the calculation of the cell references in the expression.
+     * Thereby the replacing the cell reference by the result value it calculates displayed value of the cell.
      *
      * @param i row cell.
      * @param j column cell.
      * @param childDependencyCalculated map of the children (string cell id - calculated string value) information.
      */
     private void calculateCell(final int i, final int j, final Map<CellId, Cell> childDependencyCalculated) {
-        if (i > matrix.getRowSize() || j > matrix.getColumnSize()) {
+        if (i > table.getRowSize() || j > table.getColumnSize()) {
             throw new ArrayIndexOutOfBoundsException("Out of bound exception.");
         }
-        Cell currentCell = matrix.getElement(i, j);
+        Cell currentCell = table.getElement(i, j);
         if (currentCell.getType().equals(Cell.CellType.EXPRESSION)) {
 
             for (Cell childrenCell : currentCell.getChildrenCellDependencies()) {
@@ -179,9 +183,9 @@ public class SimpleExcel {
      */
     public void calculationTable() {
         Map<CellId, Cell> childDependencyCalculated = new HashMap();
-        for (int i = 0; i < matrix.getRowSize(); i++) {
-            for (int j = 0; j < matrix.getColumnSize(); j++) {
-                Cell cell = matrix.getElement(i, j);
+        for (int i = 0; i < table.getRowSize(); i++) {
+            for (int j = 0; j < table.getColumnSize(); j++) {
+                Cell cell = table.getElement(i, j);
                 if (cell.getType().equals(Cell.CellType.EXPRESSION)) {
                     calculateCell(i, j, childDependencyCalculated);
                 }
@@ -190,14 +194,15 @@ public class SimpleExcel {
     }
 
     /**
-     * Represent matrix of the sheet.
+     * Represent data table of the sheet.
      */
-    public static class Matrix {
+    public static class Table
+    {
         final private List<List<Cell>> cells;
         final private int rowSize;
         final private int columnSize;
 
-        public Matrix(final int rowSize, final int columnSize) {
+        public Table(final int rowSize, final int columnSize) {
             this.rowSize = rowSize;
             this.columnSize = columnSize;
 
@@ -219,21 +224,21 @@ public class SimpleExcel {
         }
 
         /**
-         * Get cell of the matrix.
+         * Get cell of the table.
          *
          * @param i row index.
          * @param j column index.
-         * @return element of the matrix.
+         * @return element of the table.
          */
         public Cell getElement(final int i, final int j) {
             return cells.get(i).get(j);
         }
 
         /**
-         * Get cell of the matrix.
+         * Get cell of the table.
          *
          * @param cellId cell id.
-         * @returnlement of the matrix.
+         * @return element of the table.
          */
         public Cell getElement(final CellId cellId) {
             Pair<Integer, Integer> cellIdToIndex = CellId.cellIdToIndexes(cellId);
@@ -241,8 +246,8 @@ public class SimpleExcel {
         }
 
         /**
-         * Show output of the matrix.
-         * @return
+         * Show output of the table.
+         * @return string representation of the table.
          */
         public String printTable() {
             StringBuilder builder = new StringBuilder();
