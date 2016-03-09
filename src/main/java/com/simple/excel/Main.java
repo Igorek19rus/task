@@ -45,7 +45,7 @@ public final class Main {
         simpleExcel.buildParentDependencyTrees();
         simpleExcel.resolveCycleDependencies();
         simpleExcel.calculationTable();
-        System.out.println(simpleExcel.getMatrix().printTable());
+        System.out.println(simpleExcel.getTable().printTable());
         System.out.println();
     }
 }
