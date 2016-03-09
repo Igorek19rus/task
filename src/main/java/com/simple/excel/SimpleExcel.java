@@ -6,7 +6,8 @@ import org.apache.log4j.Logger;
 import java.util.*;
 
 /**
- * Simple excel is a software program that used for storing, organizing manipulating data.
+ * Simple excel is a software program that used for storing, organizing and manipulating data. Related data is stored in tables - which are a collection of cells
+ * organized into rows and columns. The table supports basic mathematical operation between cells.
  */
 public class SimpleExcel {
 
